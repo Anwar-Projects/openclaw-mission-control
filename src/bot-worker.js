@@ -6,7 +6,7 @@ const path = require('path');
 const http = require('http');
 
 const API_BASE = 'http://127.0.0.1:3000';
-const QUEUE_DIR = path.join(__dirname, 'data', 'queues');
+const QUEUE_DIR = path.join(__dirname, '..', 'data', 'queues');
 
 class BotWorker {
   constructor(botId, config = {}) {

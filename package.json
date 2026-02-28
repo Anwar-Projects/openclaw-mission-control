@@ -1,5 +1,32 @@
 {
+  "name": "openclaw-mission-control",
+  "version": "1.0.0",
+  "description": "Infrastructure monitoring and agent fleet orchestration dashboard",
+  "main": "src/api-server.js",
+  "scripts": {
+    "start": "node src/api-server.js",
+    "dev": "NODE_ENV=development node src/api-server.js",
+    "lint": "eslint src/",
+    "lint:fix": "eslint src/ --fix",
+    "test": "echo \"No tests yet. Add tests in tests/\" && exit 0"
+  },
+  "keywords": [
+    "dashboard",
+    "infrastructure",
+    "monitoring",
+    "proxmox",
+    "bots",
+    "orchestration"
+  ],
+  "author": "Anwar Projects",
+  "license": "MIT",
+  "engines": {
+    "node": ">=20.0.0"
+  },
   "dependencies": {
     "glob": "^13.0.6"
+  },
+  "devDependencies": {
+    "eslint": "^8.57.0"
   }
 }

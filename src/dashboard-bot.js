@@ -5,9 +5,9 @@ const fs = require('fs').promises;
 const path = require('path');
 const { DelegationRouter } = require('./delegation-service');
 
-const TASKS_FILE = path.join(__dirname, 'data', 'tasks', 'tasks.json');
-const QUEUE_DIR = path.join(__dirname, 'data', 'queues');
-const ACTIVITY_LOG = path.join(__dirname, 'data', 'activity_log.jsonl');
+const TASKS_FILE = path.join(__dirname, '..', 'data', 'tasks', 'tasks.json');
+const QUEUE_DIR = path.join(__dirname, '..', 'data', 'queues');
+const ACTIVITY_LOG = path.join(__dirname, '..', 'data', 'activity_log.jsonl');
 
 class DashboardBot {
   constructor() {

@@ -24,7 +24,7 @@ const telegramProcessor = new TelegramProcessor();
 const dashboardBot = new DashboardBot();
 
 const PORT = process.env.PORT || 3000;
-const DATA_DIR = path.join(__dirname, 'data');
+const DATA_DIR = path.join(__dirname, '..', 'data');
 const TASKS_FILE = path.join(DATA_DIR, 'tasks', 'tasks.json');
 const TASKS_TMP  = path.join(DATA_DIR, 'tasks', 'tasks.json.tmp');
 

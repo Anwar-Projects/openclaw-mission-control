@@ -8,7 +8,7 @@ const util = require('util');
 const execPromise = util.promisify(exec);
 const telegram = require('./telegram-service');
 
-const DATA_DIR = path.join(__dirname, 'data');
+const DATA_DIR = path.join(__dirname, '..', 'data');
 const INFRA_FILE = path.join(DATA_DIR, 'infra_assets.json');
 const ACTIVITY_LOG_FILE = path.join(DATA_DIR, 'activity_log.jsonl');
 const BOT_STATUS_FILE = path.join(DATA_DIR, 'bot_status.json');
@@ -781,8 +781,8 @@ class ApprovalEngine {
     try {
       const fs = require('fs').promises;
       const path = require('path');
-      const TASKS_FILE = path.join(__dirname, 'data/tasks/tasks.json');
-      const TASKS_BACKUP = path.join(__dirname, 'data/tasks/tasks.json.bak');
+      const TASKS_FILE = path.join(__dirname, '..', 'data/tasks/tasks.json');
+      const TASKS_BACKUP = path.join(__dirname, '..', 'data/tasks/tasks.json.bak');
       
       const data = await fs.readFile(TASKS_FILE, 'utf8');
       const tasks = JSON.parse(data);
@@ -862,7 +862,7 @@ class ApprovalEngine {
         let taskEscalation = null;
         
         try {
-          const taskData = await fs.readFile(path.join(__dirname, 'data/tasks/tasks.json'), 'utf8');
+          const taskData = await fs.readFile(path.join(__dirname, '..', 'data/tasks/tasks.json'), 'utf8');
           const tasks = JSON.parse(taskData);
           const task = tasks.find(t => t.id === taskId);
           

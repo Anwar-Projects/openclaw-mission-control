@@ -5,7 +5,7 @@ const fs = require('fs').promises;
 const path = require('path');
 const { ActivityLogger } = require('./infra-service');
 
-const DATA_DIR = path.join(__dirname, 'data');
+const DATA_DIR = path.join(__dirname, '..', 'data');
 const RUNS_DIR = path.join(DATA_DIR, 'runs');
 const TASKS_FILE = path.join(DATA_DIR, 'tasks', 'tasks.json');
 

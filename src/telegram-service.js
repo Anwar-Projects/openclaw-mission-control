@@ -9,8 +9,8 @@ const crypto = require('crypto');
 const NaturalLanguageRouter = require('./natural-language-router');
 
 const CONFIG_PATH = path.join(__dirname, '.config', 'telegram.env');
-const QUEUE_PATH = path.join(__dirname, 'data', 'telegram', 'message_queue.jsonl');
-const DEDUPE_PATH = path.join(__dirname, 'data', 'telegram', 'dedupe.json');
+const QUEUE_PATH = path.join(__dirname, '..', 'data', 'telegram', 'message_queue.jsonl');
+const DEDUPE_PATH = path.join(__dirname, '..', 'data', 'telegram', 'dedupe.json');
 
 class TelegramService {
   constructor() {
