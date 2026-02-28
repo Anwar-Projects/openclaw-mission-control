@@ -1,0 +1,51 @@
+{
+  "timestamp": "2026-02-17T22:38:00+04:00",
+  "scan_id": "ROUTINE-PVE-AUDIT-20260217-2238",
+  "bot": "proxmox",
+  "result": "PARTIAL",
+  "nodes": {
+    "primary_pve": {
+      "ip": "192.168.10.150",
+      "status": "ONLINE",
+      "http_status": 200,
+      "ssh_status": "BLOCKED",
+      "ssh_error": "Permission denied"
+    },
+    "secondary_pve": {
+      "ip": "192.168.10.100",
+      "status": "ONLINE",
+      "http_status": 200,
+      "ssh_status": "BLOCKED",
+      "ssh_error": "Permission denied"
+    },
+    "openclaw_lab": {
+      "ip": "192.168.40.80",
+      "status": "UNREACHABLE"
+    }
+  },
+  "critical_findings": {
+    "storage": {
+      "nvme": { "usage_pct": 100, "free_mb": 120, "status": "CRITICAL", "task": "TASK-007" },
+      "ssdvm": { "usage_pct": 100, "free_mb": 124, "status": "CRITICAL", "task": "TASK-007" }
+    },
+    "backups": {
+      "verified": false,
+      "reason": "SSH access blocked",
+      "risk_level": "P0",
+      "notes": "Cannot confirm backup jobs running with storage at 100%"
+    },
+    "stopped_vms": {
+      "count": 19,
+      "wasted_gb_estimate": 500,
+      "task": "TASK-002",
+      "priority": "P1"
+    }
+  },
+  "task_queue": {
+    "P0": ["TASK-007"],
+    "P1": ["TASK-002", "TASK-HA-001"],
+    "P2": ["TASK-018", "TASK-NET-001"],
+    "total_blocked": 5
+  },
+  "next_audit": "2026-02-17T23:08:00+04:00"
+}

@@ -1,0 +1,9 @@
+{
+  "proxmox": {
+    "bot": "proxmox",
+    "status": "working",
+    "lastUpdate": "2026-02-15T17:30:35.453Z",
+    "currentTask": "vm-backup",
+    "progress": 45
+  }
+}

@@ -1,0 +1,4 @@
+{"taskId":"mission-queue-template","title":"📋 MISSION QUEUE STRUCTURE (Template)","priority":"INFO","assignedAt":"2026-02-17T12:09:22.732Z","status":"completed","completedAt":"2026-02-17T12:25:12.588Z"}
+{"taskId":"approval-bundle-001","title":"🚦 APPROVAL BUNDLE #1 — Infrastructure Fixes","priority":"P0","assignedAt":"2026-02-17T12:26:55.920Z","status":"completed","completedAt":"2026-02-17T12:26:57.681Z"}
+{"taskId":"governance-test-001","title":"Governance Test Task","priority":"P2","risk":"MEDIUM","assignedAt":"2026-02-17T15:43:15.712Z","status":"completed","completedAt":"2026-02-17T15:44:15.935Z"}
+{"taskId":"test-approval-002","title":"🧪 Test Approval Flow — Check Telegram + Dashboard","priority":2,"risk":"LOW","assignedAt":"2026-02-17T15:43:15.712Z","status":"completed","completedAt":"2026-02-17T15:44:20.942Z"}

@@ -1,0 +1,150 @@
+{
+  "2026-02-27": {
+    "openclaw-cloud": {
+      "in": 15300,
+      "out": 1200,
+      "cost": 0.0063,
+      "activities": {
+        "heartbeat": 300,
+        "webchat": 15300,
+        "dashboard_api": 800,
+        "token_check": 400
+      }
+    },
+    "openclaw-lab": {
+      "in": 20770,
+      "out": 4000,
+      "cost": 0.0099,
+      "activities": {
+        "sessions": 0,
+        "tool_calls": 8,
+        "web_searches": 0,
+        "exec_calls": 0,
+        "browser_calls": 4,
+        "log_lines": 1277,
+        "estimated": true
+      }
+    },
+    "rp5kaliclaw": {
+      "in": 82270,
+      "out": 36500,
+      "cost": 0.0475,
+      "activities": {
+        "sessions": 0,
+        "tool_calls": 73,
+        "web_searches": 23,
+        "exec_calls": 0,
+        "browser_calls": 48,
+        "log_lines": 927,
+        "estimated": true
+      }
+    }
+  },
+  "2026-02-26": {
+    "openclaw-cloud": {
+      "in": 125000,
+      "out": 8500,
+      "cost": 0.0525,
+      "activities": {
+        "heartbeat": 1500,
+        "telegram": 8500,
+        "webchat": 18000,
+        "canvas": 2500,
+        "task_delegation": 45000,
+        "api_calls": 72000,
+        "dashboard": 12000,
+        "reports": 8500,
+        "monitoring": 3200,
+        "alerts": 2300
+      }
+    },
+    "openclaw-lab": {
+      "in": 45000,
+      "out": 3200,
+      "cost": 0.021,
+      "activities": {
+        "heartbeat": 800,
+        "telegram": 4200,
+        "cron_jobs": 15000,
+        "proxmox_audit": 8500,
+        "backup_verify": 6500,
+        "storage_check": 4200,
+        "network_scan": 3800,
+        "security_audit": 7200
+      }
+    },
+    "rp5kaliclaw": {
+      "in": 28000,
+      "out": 2100,
+      "cost": 0.0145,
+      "activities": {
+        "heartbeat": 600,
+        "telegram": 3200,
+        "mission_control": 8500,
+        "token_analytics": 5200,
+        "pentest": 4800,
+        "forensics": 3600,
+        "recon": 2900,
+        "reporting": 2300
+      }
+    }
+  },
+  "2026-02-25": {
+    "openclaw-cloud": {
+      "in": 98000,
+      "out": 7200,
+      "cost": 0.0415,
+      "activities": {
+        "heartbeat": 1200,
+        "telegram": 7200,
+        "webchat": 15000,
+        "task_delegation": 38000,
+        "api_calls": 65000
+      }
+    }
+  },
+  "2026-02-28": {
+    "openclaw-cloud": {
+      "in": 814180,
+      "out": 347500,
+      "cost": 0.4647,
+      "activities": {
+        "sessions": 0,
+        "tool_calls": 695,
+        "web_searches": 0,
+        "exec_calls": 0,
+        "browser_calls": 7,
+        "log_lines": 11918,
+        "estimated": true
+      }
+    },
+    "openclaw-lab": {
+      "in": 57520,
+      "out": 2500,
+      "cost": 0.024,
+      "activities": {
+        "sessions": 0,
+        "tool_calls": 5,
+        "web_searches": 0,
+        "exec_calls": 0,
+        "browser_calls": 4,
+        "log_lines": 5252,
+        "estimated": true
+      }
+    },
+    "rp5kaliclaw": {
+      "in": 52150,
+      "out": 3500,
+      "cost": 0.0223,
+      "activities": {
+        "sessions": 0,
+        "tool_calls": 7,
+        "web_searches": 0,
+        "exec_calls": 0,
+        "browser_calls": 5,
+        "log_lines": 4515,
+        "estimated": true
+      }
+    }
+  }
+}

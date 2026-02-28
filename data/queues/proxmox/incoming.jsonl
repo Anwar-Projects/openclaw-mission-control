@@ -1,0 +1,9 @@
+{"taskId":"risk-005","title":"🟡 RISK: Proxmox Secondary underutilized","priority":"P3","assignedAt":"2026-02-17T08:26:02.048Z","status":"completed","completedAt":"2026-02-17T11:20:23.665Z"}
+{"taskId":"improvement-002","title":"✨ QUICK WIN: VM naming consistency","priority":"P3","assignedAt":"2026-02-17T08:26:02.050Z","status":"completed","completedAt":"2026-02-17T11:20:53.678Z"}
+{"taskId":"baseline-001","title":"🔍 PROXMOX BOT — Daily Baseline Report","priority":"P1","assignedAt":"2026-02-17T12:09:22.735Z","status":"completed","completedAt":"2026-02-17T12:23:38.777Z"}
+{"taskId":"risk-002","title":"🟡 RISK: VM 127 OPENCLAW stopped indefinitely","priority":"P1","assignedAt":"2026-02-17T12:09:22.737Z","status":"completed","completedAt":"2026-02-17T12:25:16.614Z"}
+{"taskId":"routine-proxmox-audit","title":"🖥️ Proxmox Routine Audit","priority":2,"risk":"LOW","assignedAt":"2026-02-17T12:09:22.741Z","status":"completed","completedAt":"2026-02-17T12:26:16.629Z"}
+{"taskId":"improvement-003","title":"✨ QUICK WIN: Proxmox backup schedules","priority":"P1","assignedAt":"2026-02-17T12:13:02.662Z","status":"completed","completedAt":"2026-02-17T12:25:46.629Z"}
+{"taskId":"medium-risk-test","title":"MEDIUM Risk Test Task","priority":"P2","risk":"MEDIUM","assignedAt":"2026-02-17T15:43:15.711Z","status":"completed","completedAt":"2026-02-17T15:44:21.951Z"}
+{"taskId":"routine-proxmox-audit","title":"🖥️ Proxmox Routine Audit","priority":2,"risk":"LOW","assignedAt":"2026-02-22T00:28:39.688Z","status":"pending"}
+{"taskId":"routine-proxmox-audit","title":"🖥️ Proxmox Routine Audit","priority":2,"risk":"LOW","assignedAt":"2026-02-22T00:33:39.803Z","status":"pending"}

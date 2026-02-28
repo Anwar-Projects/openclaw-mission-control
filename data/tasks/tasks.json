@@ -1,0 +1,819 @@
+[
+  {
+    "id": "mission-queue-template",
+    "title": "📋 MISSION QUEUE STRUCTURE (Template)",
+    "description": "Standard workflow: Inbox → Assigned → In Progress → Review → Done | Waiting(Approval) for gated tasks",
+    "agent": "leader",
+    "priority": "INFO",
+    "status": "reference",
+    "column": "none",
+    "created": "2026-02-15T18:30:00.000Z",
+    "agentIcon": "🎯",
+    "type": "template"
+  },
+  {
+    "id": "approval-bundle-001",
+    "title": "🚦 APPROVAL BUNDLE #1 — Infrastructure Fixes",
+    "description": "PENDING APPROVAL: 5 items requiring Anwar approval:\n1) PBS-DSM datastore mount fix (Storage)\n2) Delete VM 127 OPENCLAW (Proxmox)\n3) Configure Proxmox backup jobs to PBS-DSM (Proxmox)\n4) HA Core 2026.2.2 upgrade (Home)\n5) TrueNAS API monitoring setup (Storage)\n\nRisk levels and impact details attached. Review and approve/deny individually or as bundle.",
+    "agent": "leader",
+    "priority": "P0",
+    "status": "completed",
+    "column": "completed",
+    "created": "2026-02-15T18:30:00.000Z",
+    "agentIcon": "🎯",
+    "type": "approval-bundle",
+    "requiresConfirmation": true,
+    "subtasks": [
+      {
+        "id": "app-001",
+        "title": "PBS-DSM datastore mount fix",
+        "agent": "storage",
+        "risk": "low",
+        "impact": "Restores backup capability"
+      },
+      {
+        "id": "app-002",
+        "title": "Delete VM 127 OPENCLAW",
+        "agent": "proxmox",
+        "risk": "low",
+        "impact": "Reclaims 100GB NVME"
+      },
+      {
+        "id": "app-003",
+        "title": "Configure Proxmox backup jobs",
+        "agent": "proxmox",
+        "risk": "low",
+        "impact": "Enables automated backups"
+      },
+      {
+        "id": "app-004",
+        "title": "HA Core 2026.2.2 upgrade",
+        "agent": "home",
+        "risk": "medium",
+        "impact": "Latest features + security"
+      },
+      {
+        "id": "app-005",
+        "title": "TrueNAS API monitoring",
+        "agent": "storage",
+        "risk": "low",
+        "impact": "Visibility into pool health"
+      }
+    ],
+    "approvalState": {
+      "approvedBy": null,
+      "approvedAt": null,
+      "deniedBy": "anwar",
+      "deniedAt": "2026-02-15T21:24:13.334Z",
+      "deferredBy": null,
+      "deferredAt": null,
+      "reason": "test deny"
+    },
+    "approvalEvaluation": {
+      "decision": "APPROVED",
+      "can_execute": true,
+      "approvedBy": "anwar",
+      "timestamp": "2026-02-15T21:14:05.246Z",
+      "domain_check": {
+        "valid": true,
+        "reason": "Manually approved by anwar"
+      }
+    },
+    "updated": "2026-02-22T00:32:39.762Z",
+    "lastRun": {
+      "run_id": "run-1771180424446-03lwnume6",
+      "status": "success",
+      "timestamp": "2026-02-15T18:33:44.655Z"
+    },
+    "completedAt": "2026-02-17T12:26:57.679Z",
+    "completedBy": "leader",
+    "result": "success",
+    "resultSummary": "Approval Bundle #1 ready - pending Anwar review via dashboard notifications",
+    "comments": [
+      {
+        "author": "leader",
+        "authorIcon": "🎯",
+        "text": "✅ Completed: Approval Bundle #1 ready - pending Anwar review via dashboard notifications",
+        "timestamp": "2026-02-22T00:32:39.762Z"
+      }
+    ]
+  },
+  {
+    "id": "risk-001",
+    "title": "🔴 RISK: Zero backup jobs configured",
+    "description": "ESCALATED: Critical backup gap still exists. PBS-DSM datastore remains broken (unreachable via SSH). Dependency on baseline-004 and pbs-dsm-followup tasks.\n\nCRITICAL: Proxmox Primary has no replication jobs configured. VMs have NO backup protection. Data loss risk if hardware fails.\n\n⛔ BLOCKED: Multiple dependencies — SSH auth issues on Proxmox + PBS-DSM network unreachable.",
+    "agent": "leader",
+    "priority": "P0",
+    "status": "waiting",
+    "column": "waiting",
+    "created": "2026-02-15T18:30:00.000Z",
+    "agentIcon": "🎯",
+    "type": "risk",
+    "severity": "critical"
+  },
+  {
+    "id": "baseline-001",
+    "title": "🔍 PROXMOX BOT — Daily Baseline Report",
+    "description": "BLOCKED: SSH authentication failed on both nodes. Key not configured for root@192.168.10.150 and root@192.168.10.100. Requires manual SSH key setup.\n\nORIGINAL: Run read-only health checks on Z840-MGMT-BKP (192.168.10.150) and PROX-9020 (192.168.10.100).",
+    "agent": "proxmox",
+    "priority": "P1",
+    "status": "waiting",
+    "column": "waiting",
+    "created": "2026-02-15T18:30:00.000Z",
+    "agentIcon": "🖥️",
+    "type": "daily-baseline",
+    "due": "2026-02-15T19:00:00.000Z",
+    "approvalState": {
+      "approvedBy": "Leader Bot",
+      "approvedAt": "2026-02-15T19:07:34.614Z",
+      "deniedBy": null,
+      "deniedAt": null,
+      "deferredBy": null,
+      "deferredAt": null,
+      "reason": "LOW risk + READ_ONLY daily baseline - auto-approved per ops policy"
+    },
+    "approvalEvaluation": {
+      "decision": "APPROVED",
+      "can_execute": true,
+      "approvedBy": "Leader Bot",
+      "timestamp": "2026-02-15T19:07:34.614Z",
+      "domain_check": {
+        "valid": true,
+        "reason": "Manually approved by Leader Bot"
+      }
+    },
+    "updated": "2026-02-15T19:07:34.614Z"
+  },
+  {
+    "id": "baseline-002",
+    "title": "🔍 HOME BOT — Daily Baseline Report",
+    "description": "✅ DONE: HA Health Check Complete\n• Core: 2026.1.3 (⚠️ Update pending: 2026.2.2)\n• Supervisor: 2026.02.1 (healthy)\n• OS: HAOS 16.3 on RPi4\n• Add-ons: Mosquitto 6.5.2, Terminal & SSH 10.0.1\n• Status: Healthy, fully supported\n• Note: Core update available (2026.1.3 → 2026.2.2)",
+    "agent": "home",
+    "priority": "P1",
+    "status": "done",
+    "column": "done",
+    "created": "2026-02-15T18:30:00.000Z",
+    "agentIcon": "🏠",
+    "type": "daily-baseline",
+    "due": "2026-02-15T19:00:00.000Z",
+    "approvalState": {
+      "approvedBy": "Leader Bot",
+      "approvedAt": "2026-02-15T19:07:34.626Z",
+      "deniedBy": null,
+      "deniedAt": null,
+      "deferredBy": null,
+      "deferredAt": null,
+      "reason": "LOW risk + READ_ONLY daily baseline - auto-approved per ops policy"
+    },
+    "approvalEvaluation": {
+      "decision": "APPROVED",
+      "can_execute": true,
+      "approvedBy": "Leader Bot",
+      "timestamp": "2026-02-15T19:07:34.626Z",
+      "domain_check": {
+        "valid": true,
+        "reason": "Manually approved by Leader Bot"
+      }
+    },
+    "updated": "2026-02-15T19:07:34.626Z"
+  },
+  {
+    "id": "baseline-003",
+    "title": "🔍 NETWORK BOT — Daily Baseline Report",
+    "description": "✅ DONE: Network Reachability\n• HA (192.168.60.10): ✅ UP (1.937ms)\n• Proxmox Primary (192.168.10.150): ✅ UP (1.047ms)\n• Proxmox Secondary (192.168.10.100): ✅ UP (0.978ms)\n• PBS-TRUENAS (192.168.30.21): ✅ UP (2.118ms)\n• PBS-DSM (192.168.30.22): ❌ UNREACHABLE\n• TrueNAS (192.168.30.120): ✅ UP (1.952ms)\n\n⚠️ ALERT: PBS-DSM (192.168.30.22) unreachable - no route to host",
+    "agent": "network",
+    "priority": "P1",
+    "status": "done",
+    "column": "done",
+    "created": "2026-02-15T18:30:00.000Z",
+    "agentIcon": "🌐",
+    "type": "daily-baseline",
+    "due": "2026-02-15T19:00:00.000Z",
+    "approvalState": {
+      "approvedBy": "Leader Bot",
+      "approvedAt": "2026-02-15T19:07:34.644Z",
+      "deniedBy": null,
+      "deniedAt": null,
+      "deferredBy": null,
+      "deferredAt": null,
+      "reason": "LOW risk + READ_ONLY daily baseline - auto-approved per ops policy"
+    },
+    "approvalEvaluation": {
+      "decision": "APPROVED",
+      "can_execute": true,
+      "approvedBy": "Leader Bot",
+      "timestamp": "2026-02-15T19:07:34.644Z",
+      "domain_check": {
+        "valid": true,
+        "reason": "Manually approved by Leader Bot"
+      }
+    },
+    "updated": "2026-02-15T19:07:34.644Z"
+  },
+  {
+    "id": "baseline-004",
+    "title": "🔍 STORAGE BOT — Daily Baseline Report",
+    "description": "⚠️ PARTIAL: PBS-DSM unreachable via SSH\n• TrueNAS (192.168.30.120): ✅ HTTPS accessible\n• PBS-DSM (192.168.30.22): ❌ SSH unreachable (no route to host)\n\nBLOCKED: Cannot check datastore status without SSH access.\nRelated: pbs-dsm-followup task already in WAITING state.",
+    "agent": "storage",
+    "priority": "P1",
+    "status": "waiting",
+    "column": "waiting",
+    "created": "2026-02-15T18:30:00.000Z",
+    "agentIcon": "💾",
+    "type": "daily-baseline",
+    "due": "2026-02-15T19:00:00.000Z",
+    "approvalState": {
+      "approvedBy": "Leader Bot",
+      "approvedAt": "2026-02-15T19:07:34.656Z",
+      "deniedBy": null,
+      "deniedAt": null,
+      "deferredBy": null,
+      "deferredAt": null,
+      "reason": "LOW risk + READ_ONLY daily baseline - auto-approved per ops policy"
+    },
+    "approvalEvaluation": {
+      "decision": "APPROVED",
+      "can_execute": true,
+      "approvedBy": "Leader Bot",
+      "timestamp": "2026-02-15T19:07:34.656Z",
+      "domain_check": {
+        "valid": true,
+        "reason": "Manually approved by Leader Bot"
+      }
+    },
+    "updated": "2026-02-15T19:07:34.656Z"
+  },
+  {
+    "id": "risk-002",
+    "title": "🟡 RISK: VM 127 OPENCLAW stopped indefinitely",
+    "description": "VM 127 (56GB RAM, 100GB disk) is stopped. Appears replaced by LXC 131 (openclaw-cloud). Stopped VM consumes resources (disk) and creates confusion.\n\n⛔ BLOCKED: Cannot investigate via SSH — auth key not configured for root@192.168.10.150. Same blocker as baseline-001.",
+    "agent": "proxmox",
+    "priority": "P1",
+    "status": "waiting",
+    "column": "waiting",
+    "created": "2026-02-15T18:30:00.000Z",
+    "agentIcon": "🖥️",
+    "type": "risk",
+    "severity": "medium"
+  },
+  {
+    "id": "improvement-003",
+    "title": "✨ QUICK WIN: Proxmox backup schedules",
+    "description": "Configure daily backup jobs for production VMs (TRUENAS, CORESERVICES, openclaw-cloud) to PBS-DSM. Retention: 7 daily, 4 weekly, 12 monthly.\n\n⛔ BLOCKED: Cannot check current backup status via SSH — auth key not configured for root@192.168.10.150. Same blocker as baseline-001.",
+    "agent": "proxmox",
+    "priority": "P1",
+    "status": "waiting",
+    "column": "waiting",
+    "created": "2026-02-15T18:30:00.000Z",
+    "agentIcon": "🖥️",
+    "type": "improvement",
+    "effort": "medium",
+    "benefit": "critical"
+  },
+  {
+    "id": "status-leader",
+    "title": "🎯 LEADER — Baseline Status (2026-02-15)",
+    "description": "DASHBOARD INITIALIZED. Mission Queue active. Agents assigned.\n\nINFRASTRUCTURE HEALTH:\n✅ Home Assistant (192.168.60.10): Healthy\n✅ Proxmox Primary (192.168.10.150): Healthy, 251Gi RAM\n✅ Proxmox Secondary (192.168.10.100): Healthy, 31Gi RAM\n⚠️ PBS-DSM (192.168.30.22): Running but datastore broken\n⚠️ TrueNAS (192.168.30.120): Web-only, no SSH\n\nNEXT: Awaiting bot baseline reports and Anwar approval on bundled proposals.",
+    "agent": "storage",
+    "priority": "P1",
+    "status": "completed",
+    "column": "completed",
+    "created": "2026-02-15T18:30:00.000Z",
+    "agentIcon": "💾",
+    "type": "leader-status",
+    "updated": "2026-02-22T00:33:39.795Z",
+    "assignedAt": "2026-02-22T00:32:39.765Z",
+    "assignedBy": "DashboardBot",
+    "routingReason": "Matched keywords: pbs, truenas",
+    "executionStartedAt": "2026-02-22T00:33:39.793Z",
+    "completedAt": "2026-02-17T12:25:48.636Z",
+    "completedBy": "storage",
+    "result": "success",
+    "resultSummary": "Storage task acknowledged: 🎯 LEADER — Baseline Status (2026-02-15)",
+    "comments": [
+      {
+        "author": "storage",
+        "authorIcon": "💾",
+        "text": "✅ Completed: Storage task acknowledged: 🎯 LEADER — Baseline Status (2026-02-15)",
+        "timestamp": "2026-02-22T00:33:39.795Z"
+      }
+    ]
+  },
+  {
+    "id": "task-sug-1771167037112-1",
+    "title": "Fix PBS-TRUENAS Shutdown Issues",
+    "description": "VM 122 fails graceful shutdown - install/enable QEMU Guest Agent inside the VM",
+    "agent": "proxmox",
+    "priority": "P1",
+    "status": "done",
+    "created": "2026-02-15T14:50:37.112Z",
+    "agentIcon": "🖥️",
+    "requiresConfirmation": true,
+    "completed": "2026-02-15T15:02:52.430Z"
+  },
+  {
+    "id": "task-sug-1771167037112-2",
+    "title": "Check PBS Host Connectivity",
+    "description": "PBS host 192.168.30.22 reported unreachable during health checks",
+    "agent": "network",
+    "priority": "P1",
+    "status": "done",
+    "created": "2026-02-15T14:50:37.112Z",
+    "agentIcon": "🌐",
+    "requiresConfirmation": true,
+    "completed": "2026-02-15T15:02:53.366Z"
+  },
+  {
+    "id": "risk-003",
+    "title": "🟡 RISK: HA Core update pending",
+    "description": "Home Assistant Core 2026.2.2 available (currently 2026.1.3). Update includes bug fixes and features. Delaying too long may miss security patches.",
+    "agent": "home",
+    "priority": "P2",
+    "status": "waiting_approval",
+    "column": "review",
+    "created": "2026-02-15T18:30:00.000Z",
+    "agentIcon": "🏠",
+    "type": "risk",
+    "severity": "low",
+    "approvalState": {
+      "decision": "PENDING",
+      "approver": "Anwar",
+      "pendingSince": "2026-02-22T00:31:59.876Z"
+    }
+  },
+  {
+    "id": "risk-004",
+    "title": "🟡 RISK: TrueNAS monitoring gap",
+    "description": "TrueNAS-STG (192.168.30.120) accessible via HTTPS only. No automated capacity/replication monitoring. Pool fill rate unknown.",
+    "agent": "storage",
+    "priority": "P2",
+    "status": "waiting_approval",
+    "column": "review",
+    "created": "2026-02-15T18:30:00.000Z",
+    "agentIcon": "💾",
+    "type": "risk",
+    "severity": "low",
+    "approvalState": {
+      "decision": "PENDING",
+      "approver": "Anwar",
+      "pendingSince": "2026-02-22T00:32:00.288Z"
+    }
+  },
+  {
+    "id": "improvement-001",
+    "title": "✨ QUICK WIN: PBS datastore monitoring",
+    "description": "Setup automated datastore health checks with capacity alerts at 80%, 90%, 95%. Enable GC/prune verification.",
+    "agent": "storage",
+    "priority": "P2",
+    "status": "completed",
+    "column": "completed",
+    "created": "2026-02-15T18:30:00.000Z",
+    "agentIcon": "💾",
+    "type": "improvement",
+    "effort": "low",
+    "benefit": "high",
+    "updated": "2026-02-22T00:33:39.798Z",
+    "assignedAt": "2026-02-22T00:32:39.767Z",
+    "assignedBy": "DashboardBot",
+    "routingReason": "Matched keywords: pbs, gc",
+    "executionStartedAt": "2026-02-22T00:33:39.796Z",
+    "completedAt": "2026-02-17T11:20:55.734Z",
+    "completedBy": "storage",
+    "result": "success",
+    "resultSummary": "PBS monitoring specification ready",
+    "comments": [
+      {
+        "author": "storage",
+        "authorIcon": "💾",
+        "text": "✅ Completed: PBS monitoring specification ready",
+        "timestamp": "2026-02-22T00:33:39.798Z"
+      }
+    ]
+  },
+  {
+    "id": "improvement-004",
+    "title": "✨ QUICK WIN: HA automation health dashboard",
+    "description": "Create dashboard view of active automations, disabled automations, and recent failures. Identify unused or broken automations.",
+    "agent": "home",
+    "priority": "P2",
+    "status": "completed",
+    "column": "completed",
+    "created": "2026-02-15T18:30:00.000Z",
+    "agentIcon": "🏠",
+    "type": "improvement",
+    "effort": "low",
+    "benefit": "medium",
+    "updated": "2026-02-22T00:33:39.801Z",
+    "assignedAt": "2026-02-22T00:32:39.768Z",
+    "assignedBy": "DashboardBot",
+    "routingReason": "Matched keywords: ha",
+    "executionStartedAt": "2026-02-22T00:33:39.800Z",
+    "completedAt": "2026-02-17T11:20:50.802Z",
+    "completedBy": "home",
+    "result": "success",
+    "resultSummary": "Automation Health Dashboard specification ready",
+    "comments": [
+      {
+        "author": "home",
+        "authorIcon": "🏠",
+        "text": "✅ Completed: Automation Health Dashboard specification ready",
+        "timestamp": "2026-02-22T00:33:39.801Z"
+      }
+    ]
+  },
+  {
+    "id": "task-sug-1771167037112-3",
+    "title": "Enable fail2ban on Proxmox",
+    "description": "Additional SSH brute-force protection for management access",
+    "agent": "security",
+    "priority": "P2",
+    "status": "done",
+    "created": "2026-02-15T14:50:37.112Z",
+    "agentIcon": "🔐",
+    "requiresConfirmation": true,
+    "completed": "2026-02-15T15:02:54.092Z"
+  },
+  {
+    "id": "risk-005",
+    "title": "🟡 RISK: Proxmox Secondary underutilized",
+    "description": "PROX-9020 has only 1 VM running (chatbot). 28GB RAM idle. Opportunity to rebalance workloads or enable more services.",
+    "agent": "proxmox",
+    "priority": "P3",
+    "status": "waiting_approval",
+    "column": "review",
+    "created": "2026-02-15T18:30:00.000Z",
+    "agentIcon": "🖥️",
+    "type": "risk",
+    "severity": "low",
+    "approvalState": {
+      "decision": "PENDING",
+      "approver": "Anwar",
+      "pendingSince": "2026-02-22T00:32:01.262Z"
+    }
+  },
+  {
+    "id": "improvement-002",
+    "title": "✨ QUICK WIN: VM naming consistency",
+    "description": "Standardize VM naming: [ENV]-[ROLE]-[ID] format. Current names are inconsistent (UBS-DOCKER, CHATGPT-CLONE, etc.).",
+    "agent": "proxmox",
+    "priority": "P3",
+    "status": "waiting_approval",
+    "column": "review",
+    "created": "2026-02-15T18:30:00.000Z",
+    "agentIcon": "🖥️",
+    "type": "improvement",
+    "effort": "low",
+    "benefit": "medium",
+    "approvalState": {
+      "decision": "PENDING",
+      "approver": "Anwar",
+      "pendingSince": "2026-02-22T00:32:01.540Z"
+    }
+  },
+  {
+    "id": "improvement-005",
+    "title": "✨ QUICK WIN: Network topology documentation",
+    "description": "Generate visual diagram of VLANs, hosts, and interconnections. Update TOOLS.md with firewall rules for reference.",
+    "agent": "network",
+    "priority": "P3",
+    "status": "waiting_approval",
+    "column": "review",
+    "created": "2026-02-15T18:30:00.000Z",
+    "agentIcon": "🌐",
+    "type": "improvement",
+    "effort": "medium",
+    "benefit": "medium",
+    "approvalState": {
+      "decision": "PENDING",
+      "approver": "Anwar",
+      "pendingSince": "2026-02-22T00:32:01.829Z"
+    }
+  },
+  {
+    "id": "medium-risk-test",
+    "title": "MEDIUM Risk Test Task",
+    "risk": "MEDIUM",
+    "status": "completed",
+    "column": "completed",
+    "agent": "proxmox",
+    "canAutoRoute": true,
+    "created": "2026-02-15T22:33:26+04:00",
+    "updated": "2026-02-22T00:32:39.770Z",
+    "approvalState": {
+      "approvedBy": "Anwar",
+      "approvedAt": "2026-02-15T18:33:26.635Z",
+      "deniedBy": null,
+      "deniedAt": null,
+      "deferredBy": null,
+      "deferredAt": null,
+      "reason": "MEDIUM risk should send Telegram"
+    },
+    "approvalEvaluation": {
+      "decision": "APPROVED",
+      "can_execute": true,
+      "approvedBy": "Anwar",
+      "timestamp": "2026-02-15T18:33:26.635Z",
+      "domain_check": {
+        "valid": true,
+        "reason": "Manually approved by Anwar"
+      }
+    },
+    "completedAt": "2026-02-17T15:44:21.950Z",
+    "completedBy": "proxmox",
+    "result": "success",
+    "resultSummary": "Proxmox task acknowledged: MEDIUM Risk Test Task",
+    "comments": [
+      {
+        "author": "proxmox",
+        "authorIcon": "🖥️",
+        "text": "✅ Completed: Proxmox task acknowledged: MEDIUM Risk Test Task",
+        "timestamp": "2026-02-22T00:32:39.770Z"
+      }
+    ]
+  },
+  {
+    "id": "governance-test-001",
+    "title": "Governance Test Task",
+    "column": "completed",
+    "status": "completed",
+    "risk": "MEDIUM",
+    "agent": "leader",
+    "agentIcon": "👤",
+    "description": "Test task for human-in-the-loop governance",
+    "createdAt": "2026-02-16T01:24:30+04:00",
+    "approvalState": {
+      "approvedBy": "anwar",
+      "approvedAt": "2026-02-15T21:24:37.083Z",
+      "deniedBy": null,
+      "deniedAt": null,
+      "deferredBy": null,
+      "deferredAt": null,
+      "reason": "human approval test"
+    },
+    "approvalEvaluation": {
+      "decision": "APPROVED",
+      "can_execute": true,
+      "approvedBy": "anwar",
+      "timestamp": "2026-02-15T21:24:37.083Z",
+      "domain_check": {
+        "valid": true,
+        "reason": "Manually approved by anwar"
+      }
+    },
+    "updated": "2026-02-22T00:32:39.771Z",
+    "completedAt": "2026-02-17T15:44:15.934Z",
+    "completedBy": "leader",
+    "result": "success",
+    "resultSummary": "Task coordinated by Leader - ready for human approval",
+    "comments": [
+      {
+        "author": "leader",
+        "authorIcon": "👤",
+        "text": "✅ Completed: Task coordinated by Leader - ready for human approval",
+        "timestamp": "2026-02-22T00:32:39.771Z"
+      }
+    ]
+  },
+  {
+    "id": "test-approval-002",
+    "title": "🧪 Test Approval Flow — Check Telegram + Dashboard",
+    "description": "Test end-to-end approval flow. You should receive this on Telegram AND see it in the dashboard Review column.\n\nAction: Approve this test task\nRisk: LOW\nImpact: Updates activity log only",
+    "column": "completed",
+    "status": "completed",
+    "priority": 2,
+    "risk": "LOW",
+    "benefit": "Verify governance",
+    "agent": "leader",
+    "agentIcon": "👤",
+    "owner_bot": "leader",
+    "tags": [
+      "test",
+      "governance"
+    ],
+    "createdAt": "2026-02-16T01:26:02+04:00",
+    "source": "user-request",
+    "actions_available": [
+      "approve",
+      "deny",
+      "defer"
+    ],
+    "approvalState": {
+      "required": true,
+      "approvedBy": "Anwar",
+      "approvedAt": "2026-02-15T21:36:53.598Z",
+      "deniedBy": null,
+      "deniedAt": null,
+      "deferredBy": null,
+      "deferredAt": null,
+      "reason": "Test"
+    },
+    "comments": [
+      {
+        "author": "Anwar",
+        "authorIcon": "👤",
+        "text": "Approved",
+        "timestamp": "2026-02-15T21:28:31.993Z"
+      },
+      {
+        "author": "Anwar",
+        "authorIcon": "👤",
+        "text": "Approved",
+        "timestamp": "2026-02-15T21:31:55.388Z"
+      },
+      {
+        "author": "Anwar",
+        "authorIcon": "👤",
+        "text": "/approve test-approval-002",
+        "timestamp": "2026-02-15T21:36:00.553Z"
+      },
+      {
+        "author": "leader",
+        "authorIcon": "👤",
+        "text": "✅ Completed: Task coordinated by Leader - ready for human approval",
+        "timestamp": "2026-02-22T00:32:39.772Z"
+      }
+    ],
+    "approvalEvaluation": {
+      "decision": "APPROVED",
+      "can_execute": true,
+      "approvedBy": "Anwar",
+      "timestamp": "2026-02-15T21:36:53.598Z",
+      "domain_check": {
+        "valid": true,
+        "reason": "Manually approved by Anwar"
+      }
+    },
+    "updated": "2026-02-22T00:32:39.772Z",
+    "completedAt": "2026-02-17T15:44:20.941Z",
+    "completedBy": "leader",
+    "result": "success",
+    "resultSummary": "Task coordinated by Leader - ready for human approval"
+  },
+  {
+    "id": "routine-proxmox-audit",
+    "title": "🖥️ Proxmox Routine Audit",
+    "description": "SKIPPED (1:57 AM): Cannot execute - SSH auth issues. See baseline-001.\n30-minute health check: backup jobs, VM/LXC status, disk usage, snapshots, replication, version drift, cron jobs.",
+    "column": "completed",
+    "status": "completed",
+    "type": "routine",
+    "priority": 2,
+    "risk": "LOW",
+    "agent": "proxmox",
+    "agentIcon": "🖥️",
+    "owner_bot": "proxmox",
+    "tags": [
+      "routine",
+      "audit",
+      "proxmox"
+    ],
+    "recurring": true,
+    "interval": "30m",
+    "createdAt": "2026-02-16T01:38:46+04:00",
+    "approvalState": {
+      "required": false
+    },
+    "routingReason": "Matched keywords: proxmox, vm, lxc",
+    "routedBy": "DashboardBot (auto-triage)",
+    "updated": "2026-02-22T00:34:39.817Z",
+    "assignedAt": "2026-02-22T00:33:39.803Z",
+    "assignedBy": "DashboardBot",
+    "executionStartedAt": "2026-02-22T00:34:39.815Z",
+    "completedAt": "2026-02-17T12:26:16.627Z",
+    "completedBy": "proxmox",
+    "result": "success",
+    "resultSummary": "Proxmox task acknowledged: 🖥️ Proxmox Routine Audit",
+    "comments": [
+      {
+        "author": "proxmox",
+        "authorIcon": "🖥️",
+        "text": "✅ Completed: Proxmox task acknowledged: 🖥️ Proxmox Routine Audit",
+        "timestamp": "2026-02-22T00:34:39.817Z"
+      }
+    ]
+  },
+  {
+    "id": "routine-storage-audit",
+    "title": "💾 Storage Routine Audit",
+    "description": "SKIPPED (1:57 AM): PBS-DSM unreachable. See baseline-004/pbs-dsm-followup.\n30-minute health check: datastore mounts, prune/GC/verify jobs, disk usage, NFS/SMB health, orphaned datastores.",
+    "column": "completed",
+    "status": "completed",
+    "type": "routine",
+    "priority": 2,
+    "risk": "LOW",
+    "agent": "storage",
+    "agentIcon": "💾",
+    "owner_bot": "storage",
+    "tags": [
+      "routine",
+      "audit",
+      "storage",
+      "pbs",
+      "truenas"
+    ],
+    "recurring": true,
+    "interval": "30m",
+    "createdAt": "2026-02-16T01:38:46+04:00",
+    "approvalState": {
+      "required": false
+    },
+    "routingReason": "Matched keywords: storage, pbs, truenas, nfs, gc",
+    "routedBy": "DashboardBot (auto-triage)",
+    "updated": "2026-02-22T00:34:39.820Z",
+    "assignedAt": "2026-02-22T00:33:39.805Z",
+    "assignedBy": "DashboardBot",
+    "executionStartedAt": "2026-02-22T00:34:39.818Z",
+    "completedAt": "2026-02-17T12:27:18.642Z",
+    "completedBy": "storage",
+    "result": "success",
+    "resultSummary": "Storage task acknowledged: 💾 Storage Routine Audit",
+    "comments": [
+      {
+        "author": "storage",
+        "authorIcon": "💾",
+        "text": "✅ Completed: Storage task acknowledged: 💾 Storage Routine Audit",
+        "timestamp": "2026-02-22T00:34:39.820Z"
+      }
+    ]
+  },
+  {
+    "id": "routine-network-audit",
+    "title": "🌐 Network Routine Audit",
+    "description": "✅ DONE (1:57 AM): Network reachability complete. See baseline-003 for results.\n30-minute health check: asset reachability, latency, interfaces, VLAN routing, firewall.",
+    "column": "done",
+    "status": "done",
+    "type": "routine",
+    "priority": 2,
+    "risk": "LOW",
+    "agent": "network",
+    "agentIcon": "🌐",
+    "owner_bot": "network",
+    "tags": [
+      "routine",
+      "audit",
+      "network"
+    ],
+    "recurring": true,
+    "interval": "30m",
+    "createdAt": "2026-02-16T01:38:46+04:00",
+    "approvalState": {
+      "required": false
+    }
+  },
+  {
+    "id": "routine-home-audit",
+    "title": "🏠 Home Assistant Routine Audit",
+    "description": "✅ DONE (1:57 AM): HA health check complete. See baseline-002. Core update 2026.2.2 available.\n30-minute health check: core updates, automations, add-ons, disk space, backups.",
+    "column": "done",
+    "status": "done",
+    "type": "routine",
+    "priority": 2,
+    "risk": "LOW",
+    "agent": "home",
+    "agentIcon": "🏠",
+    "owner_bot": "home",
+    "tags": [
+      "routine",
+      "audit",
+      "home-assistant"
+    ],
+    "recurring": true,
+    "interval": "30m",
+    "createdAt": "2026-02-16T01:38:46+04:00",
+    "approvalState": {
+      "required": false
+    }
+  },
+  {
+    "id": "pbs-dsm-followup",
+    "title": "🔴 PBS-DSM Datastore Follow-up",
+    "description": "Investigate and fix PBS-DSM path mismatch. .chunks exists at /mnt/pbs-backups/PBS/.chunks but expected at /mnt/pbs-backups/.chunks. Options: symlink or update datastore config.\n\n⛔ BLOCKED: Cannot reach PBS-DSM (192.168.30.22) via SSH from openclaw-cloud. 'No route to host' error. Possible causes: network segmentation, PBS VM networking issue, or incorrect IP.",
+    "column": "waiting",
+    "status": "waiting",
+    "type": "approval",
+    "priority": 0,
+    "risk": "MEDIUM",
+    "agent": "storage",
+    "agentIcon": "💾",
+    "owner_bot": "storage",
+    "tags": [
+      "incident",
+      "pbs",
+      "datastore",
+      "follow-up"
+    ],
+    "createdAt": "2026-02-16T01:38:46+04:00",
+    "approvalState": {
+      "required": true,
+      "approvedBy": "Anwar",
+      "approvedAt": "2026-02-15T21:42:08.514Z",
+      "deniedBy": null,
+      "deniedAt": null,
+      "deferredBy": null,
+      "deferredAt": null,
+      "reason": null
+    },
+    "executionStatus": "BLOCKED",
+    "blockReason": "PBS-DSM (192.168.30.22) unreachable via SSH from openclaw-cloud. Network or auth issue. Requires manual SSH key setup or network routing fix.",
+    "updated": "2026-02-16T01:49:00.000+04:00"
+  }
+]

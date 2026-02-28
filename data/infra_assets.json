@@ -1,0 +1,91 @@
+{
+  "assets": [
+    {
+      "id": "proxmox-primary",
+      "name": "Proxmox Primary (z840)",
+      "ip": "192.168.10.150",
+      "role": "PRIMARY",
+      "type": "Proxmox VE 8.4.16",
+      "category": "proxmox",
+      "domain": "🖥️ Proxmox Bot",
+      "status": "🟢 OK",
+      "lastChecked": "2026-02-18T23:38:00+04:00",
+      "issue": "🔴 Version drift: 8.4.16 vs secondary 9.1.5 - TASK-PVE-001"
+    },
+    {
+      "id": "proxmox-secondary",
+      "name": "Proxmox Secondary (9020)",
+      "ip": "192.168.10.100",
+      "role": "SECONDARY",
+      "type": "Proxmox VE 9.1.5",
+      "category": "proxmox",
+      "domain": "🖥️ Proxmox Bot",
+      "status": "🟢 OK",
+      "lastChecked": "2026-02-18T23:38:00+04:00",
+      "issue": "🔴 Version drift: 9.1.5 vs primary 8.4.16 - TASK-PVE-001"
+    },
+    {
+      "id": "homeassistant",
+      "name": "Home Assistant",
+      "ip": "192.168.60.10",
+      "role": "PRIMARY",
+      "type": "Home Assistant OS",
+      "category": "home",
+      "domain": "🏠 Home Bot",
+      "status": "🟢 OK",
+      "lastChecked": "2026-02-18T23:38:00+04:00"
+    },
+    {
+      "id": "maindsm",
+      "name": "maindsm",
+      "ip": "192.168.30.200",
+      "role": "PRIMARY STORAGE",
+      "type": "Synology DSM",
+      "category": "storage",
+      "domain": "💾 Storage Bot",
+      "notes": "VM ID 100, running on PVE Secondary",
+      "status": "🟢 OK",
+      "lastChecked": "2026-02-18T23:38:00+04:00"
+    },
+    {
+      "id": "truenas",
+      "name": "truenas",
+      "ip": "192.168.30.120",
+      "role": "SECONDARY / BACKUP STORAGE",
+      "type": "TrueNAS",
+      "category": "storage",
+      "domain": "💾 Storage Bot",
+      "notes": "VM ID 114, running - backup target for vzdump",
+      "status": "🟢 OK",
+      "lastChecked": "2026-02-18T23:38:00+04:00"
+    },
+    {
+      "id": "pbs-dsm",
+      "name": "PBS-DSM",
+      "ip": "192.168.30.22",
+      "role": "BACKUP SERVER",
+      "type": "Proxmox Backup Server",
+      "category": "storage",
+      "domain": "💾 Storage Bot",
+      "datastore": "pbs-backups",
+      "datastorePath": "/mnt/pbs-backups",
+      "mountSource": "192.168.30.200:/volume4/PROXMOX",
+      "status": "🔴 ERROR",
+      "issue": "Path mismatch - .chunks exists at /mnt/pbs-backups/PBS/.chunks but expected at /mnt/pbs-backups/.chunks",
+      "lastChecked": "2026-02-16T00:57:00+04:00"
+    },
+    {
+      "id": "pbs-legacy",
+      "name": "PBS-Legacy",
+      "ip": "192.168.30.21",
+      "role": "REPLICATION TARGET",
+      "type": "Proxmox Backup Server",
+      "category": "storage",
+      "domain": "💾 Storage Bot",
+      "status": "🟢 OK",
+      "lastChecked": "2026-02-18T23:38:00+04:00",
+      "notes": "VM ID 122, running - web service stable since 23:37"
+    }
+  ],
+  "updatedAt": "2026-02-18T23:38:00+04:00"
+}

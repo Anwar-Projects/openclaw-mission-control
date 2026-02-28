@@ -1,0 +1,1772 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🎯 Mission Control</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div id="app">
+        <!-- Top Bar -->
+        <header class="top-bar">
+            <div class="top-left">
+                <h1>🎯 Mission Control</h1>
+                <span class="top-status" id="system-status">🟢 All systems operational</span>
+            </div>
+            <div class="top-center">
+                <div class="top-counters">
+                    <span class="counter"><span class="counter-value" id="active-agents">7</span> Active</span>
+                    <span class="counter"><span class="counter-value" id="tasks-count">16</span> Tasks</span>
+                    <span class="counter"><span class="counter-value" id="alerts-count">1</span> Alerts</span>
+                </div>
+            </div>
+            <div class="top-right">
+                <button class="top-btn" id="btn-active-toggle" title="Toggle Agent Activity">
+                    <span class="toggle-indicator active"></span> Active
+                </button>
+                <button class="top-btn" id="btn-chat">💬 Squad Chat</button>
+                <button class="top-btn" id="btn-broadcast">📢 Broadcast</button>
+                <button class="top-btn" id="btn-docs">📄 Docs</button>
+                <button class="top-btn notification-bell" id="btn-notifications" title="Your Attention Required">
+                    <span class="bell-icon">🔔</span>
+                    <span class="notification-badge" id="notification-badge">0</span>
+                </button>
+            </div>
+        </header>
+
+        <main class="main main-landscape">
+            <!-- LEFT: Mission Queue (Kanban) -->
+            <section class="mission-queue-panel" id="mission-queue-panel">
+                <div class="kanban-header">
+                    <h2>📋 Mission Queue</h2>
+                    <div class="kanban-filters">
+                        <button class="filter-pill active" data-filter="all">All</button>
+                        <button class="filter-pill" data-filter="P0">P0</button>
+                        <button class="filter-pill" data-filter="P1">P1</button>
+                        <button class="filter-pill" data-filter="P2">P2</button>
+                    </div>
+                </div>
+                <div class="kanban-board" id="kanban-board">
+                    <!-- Column 1: Review (Awaiting Approval) -->
+                    <div class="kanban-column" data-column="review">
+                        <div class="column-header">
+                            <span class="column-name">📋 REVIEW</span>
+                            <span class="column-count" id="count-review">0</span>
+                        </div>
+                        <div class="column-tasks" id="col-review" data-column="review"></div>
+                    </div>
+                    <!-- Column 2: In-Progress (Approved, awaiting assignment) -->
+                    <div class="kanban-column waiting" data-column="in-progress">
+                        <div class="column-header">
+                            <span class="column-name">📥 IN-PROGRESS</span>
+                            <span class="column-count" id="count-in-progress">0</span>
+                        </div>
+                        <div class="column-tasks" id="col-in-progress" data-column="in-progress"></div>
+                    </div>
+                    <!-- Column 3: Assigned (Bot picked up, not yet executing) -->
+                    <div class="kanban-column assigned" data-column="assigned">
+                        <div class="column-header">
+                            <span class="column-name">📤 ASSIGNED</span>
+                            <span class="column-count" id="count-assigned">0</span>
+                        </div>
+                        <div class="column-tasks" id="col-assigned" data-column="assigned"></div>
+                    </div>
+                    <!-- Column 4: Executing (Bot actively working) -->
+                    <div class="kanban-column executing" data-column="executing">
+                        <div class="column-header">
+                            <span class="column-name">🔨 EXECUTING</span>
+                            <span class="column-count" id="count-executing">0</span>
+                        </div>
+                        <div class="column-tasks" id="col-executing" data-column="executing"></div>
+                    </div>
+                    <!-- Column 5: Completed (Done) -->
+                    <div class="kanban-column done" data-column="completed">
+                        <div class="column-header">
+                            <span class="column-name">✅ COMPLETED</span>
+                            <span class="column-count" id="count-completed">0</span>
+                        </div>
+                        <div class="column-tasks" id="col-completed" data-column="completed"></div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- CENTER COLUMN: Squad Chat + Command Center + Bot Activity + Activity Timeline -->
+            <section class="center-column" id="center-column">
+                <!-- B) Command Center Panel (Anwar) -->
+                <div class="command-center-panel" id="command-center-panel">
+                    <div class="panel-header">
+                        <h2>🧭 COMMAND CENTER (ANWAR)</h2>
+                    </div>
+                    <div class="command-center-content">
+                        <div class="command-section">
+                            <div class="command-section-header">
+                                <span class="command-icon">✋</span>
+                                <span class="command-title">Approvals Pending (Anwar)</span>
+                                <span class="command-count">Count: -</span>
+                            </div>
+                            <div class="command-items" id="command-approvals">
+                                <div class="command-placeholder-item">-</div>
+                                <div class="command-placeholder-item">-</div>
+                                <div class="command-placeholder-item">-</div>
+                            </div>
+                            <button class="view-all-btn-small">View All</button>
+                        </div>
+
+                        <div class="command-section">
+                            <div class="command-section-header">
+                                <span class="command-icon">🚨</span>
+                                <span class="command-title">Critical Issues</span>
+                                <span class="command-count">Count: -</span>
+                            </div>
+                            <div class="command-items" id="command-critical">
+                                <div class="command-placeholder-item">-</div>
+                                <div class="command-placeholder-item">-</div>
+                                <div class="command-placeholder-item">-</div>
+                            </div>
+                            <button class="view-all-btn-small">View All</button>
+                        </div>
+
+                        <div class="command-section">
+                            <div class="command-section-header">
+                                <span class="command-icon">🖥️</span>
+                                <span class="command-title">Network & Performance Snapshot</span>
+                            </div>
+                            <div class="command-snapshot">
+                                <div class="snapshot-item">
+                                    <span class="snapshot-label">Online:</span>
+                                    <span class="snapshot-value">-/-</span>
+                                </div>
+                                <div class="snapshot-item">
+                                    <span class="snapshot-label">Top CPU:</span>
+                                    <span class="snapshot-value">-</span>
+                                </div>
+                                <div class="snapshot-item">
+                                    <span class="snapshot-label">Top RAM:</span>
+                                    <span class="snapshot-value">-</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Activity Timeline REPLACED with Token Consumption Analysis -->
+                <div class="token-analytics-panel" id="token-analytics-panel">
+                    <div class="panel-header">
+                        <h2>📊 Token Consumption Analysis</h2>
+                        <select id="token-date-selector" class="date-selector">
+                            <option value="">Loading dates...</option>
+                        </select>
+                    </div>
+                    
+                    <!-- Summary Cards -->
+                    <div class="token-summary-row">
+                        <div class="token-summary-card">
+                            <div class="token-summary-label">Input Tokens</div>
+                            <div class="token-summary-value" id="token-total-in">0</div>
+                        </div>
+                        <div class="token-summary-card">
+                            <div class="token-summary-label">Output Tokens</div>
+                            <div class="token-summary-value" id="token-total-out">0</div>
+                        </div>
+                        <div class="token-summary-card">
+                            <div class="token-summary-label">Cost</div>
+                            <div class="token-summary-value" id="token-total-cost">$0.00</div>
+                        </div>
+                        <div class="token-summary-card">
+                            <div class="token-summary-label">Systems</div>
+                            <div class="token-summary-value" id="token-system-count">0</div>
+                        </div>
+                    </div>
+                    
+                    <!-- Charts Row: Pie + Weekly Bar -->
+                    <div class="token-charts-row">
+                        <!-- Left: Pie Chart -->
+                        <div class="token-chart-container half-width">
+                            <canvas id="token-pie-chart"></canvas>
+                        </div>
+                        
+                        <!-- Right: Weekly Bar Chart -->
+                        <div class="token-chart-container half-width">
+                            <canvas id="token-weekly-chart"></canvas>
+                        </div>
+                    </div>
+                    
+                    <!-- Activities Table -->
+                    <div class="token-table-container" id="token-activities-table">
+                        <table class="token-table">
+                            <thead>
+                                <tr id="token-table-headers">
+                                    <th>Genie</th>
+                                    <th>PA</th>
+                                    <th>Kali</th>
+                                </tr>
+                            </thead>
+                            <tbody id="token-table-body">
+                                <tr><td colspan="3" class="empty-cell">Select a date to view token consumption</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Squad Chat - DISABLED/REMOVED as requested -->
+            </section>
+
+            <!-- RIGHT COLUMN: System Overview + Agent Fleet + HA -->
+            <section class="right-column" id="right-column">
+                <!-- System Overview -->
+                <div class="system-overview-panel" id="system-overview-panel">
+                    <div class="overview-header">
+                        <h2>🖥️ System Overview</h2>
+                        <span class="last-updated" id="overview-last-updated">Last updated: -</span>
+                        <button class="refresh-btn" id="btn-refresh-overview" title="Refresh">🔄</button>
+                    </div>
+                    <div class="overview-grid" id="overview-grid">
+                        <!-- Cards populated by JS -->
+                    </div>
+                </div>
+
+                <!-- Agent Fleet Panel (MOVED TO RIGHT) -->
+                <div class="agent-fleet-panel" id="agent-fleet-panel">
+                    <div class="panel-header">
+                        <h2>🤖 Agent Fleet</h2>
+                        <div class="fleet-header-controls">
+                            <span class="agent-count"><span id="fleet-count">7</span> Active</span>
+                        </div>
+                    </div>
+                    <div class="agent-fleet-grid" id="agent-fleet-grid">
+                        <!-- Agent cards populated by JS -->
+                    </div>
+                </div>
+
+                <!-- D) Home Assistant Status Panel -->
+            <section class="ha-status-panel" id="ha-status-panel">
+                <div class="panel-header">
+                    <h2>🏠 Home Assistant</h2>
+                    <div class="ha-status-badge" id="ha-status-badge">🟢 Connected</div>
+                </div>
+                <div class="ha-content">
+                    <div class="ha-section">
+                        <div class="ha-section-header">
+                            <span class="ha-icon">🔌</span>
+                            <span class="ha-title">Core Status</span>
+                        </div>
+                        <div class="ha-stats" id="ha-core-stats">
+                            <div class="ha-stat">
+                                <span class="ha-stat-label">Core</span>
+                                <span class="ha-stat-value" id="ha-core-version">2026.2.2</span>
+                            </div>
+                            <div class="ha-stat">
+                                <span class="ha-stat-label">Uptime</span>
+                                <span class="ha-stat-value" id="ha-uptime">-</span>
+                            </div>
+                            <div class="ha-stat">
+                                <span class="ha-stat-label">Entities</span>
+                                <span class="ha-stat-value" id="ha-entities">471</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="ha-section">
+                        <div class="ha-section-header">
+                            <span class="ha-icon">⚡</span>
+                            <span class="ha-title">Active Automations (20)</span>
+                            <span class="ha-view-link"><a href="http://192.168.60.10:8123/config/automation" target="_blank">Open HA →</a></span>
+                        </div>
+                        <div class="ha-automations-grid" id="ha-automations">
+                            <!-- Security -->
+                            <div class="ha-automation-item security">
+                                <span class="ha-auto-icon">💧</span>
+                                <span class="ha-auto-name">Leak Detection</span>
+                                <span class="ha-auto-status ✅">UC-05</span>
+                            </div>
+                            <div class="ha-automation-item security">
+                                <span class="ha-auto-icon">🚪</span>
+                                <span class="ha-auto-name">Entry Alert</span>
+                                <span class="ha-auto-status ✅">UC-09</span>
+                            </div>
+                            <div class="ha-automation-item security">
+                                <span class="ha-auto-icon">🔒</span>
+                                <span class="ha-auto-name">Tamper Detect</span>
+                                <span class="ha-auto-status ✅">UC-61</span>
+                            </div>
+                            <div class="ha-automation-item security">
+                                <span class="ha-auto-icon">🔥</span>
+                                <span class="ha-auto-name">Smoke Emergency</span>
+                                <span class="ha-auto-status ✅">UC-62</span>
+                            </div>
+                            <div class="ha-automation-item security">
+                                <span class="ha-auto-icon">☠️</span>
+                                <span class="ha-auto-name">CO Alarm</span>
+                                <span class="ha-auto-status ✅">UC-63</span>
+                            </div>
+                            <!-- Presence -->
+                            <div class="ha-automation-item presence">
+                                <span class="ha-auto-icon">🏠</span>
+                                <span class="ha-auto-name">Welcome Home</span>
+                                <span class="ha-auto-status ✅">UC-01</span>
+                            </div>
+                            <div class="ha-automation-item presence">
+                                <span class="ha-auto-icon">👋</span>
+                                <span class="ha-auto-name">Secure Mode</span>
+                                <span class="ha-auto-status ✅">UC-02</span>
+                            </div>
+                            <div class="ha-automation-item presence">
+                                <span class="ha-auto-icon">😴</span>
+                                <span class="ha-auto-name">Sleep Mode</span>
+                                <span class="ha-auto-status ✅">UC-07</span>
+                            </div>
+                            <div class="ha-automation-item presence">
+                                <span class="ha-auto-icon">🌅</span>
+                                <span class="ha-auto-name">Wake Up</span>
+                                <span class="ha-auto-status ✅">UC-08</span>
+                            </div>
+                            <!-- Environment -->
+                            <div class="ha-automation-item climate">
+                                <span class="ha-auto-icon">🌡️</span>
+                                <span class="ha-auto-name">Climate Control</span>
+                                <span class="ha-auto-status ✅">UC-03</span>
+                            </div>
+                            <div class="ha-automation-item climate">
+                                <span class="ha-auto-icon">🔋</span>
+                                <span class="ha-auto-name">Low Battery</span>
+                                <span class="ha-auto-status ✅">UC-04</span>
+                            </div>
+                            <div class="ha-automation-item climate">
+                                <span class="ha-auto-icon">⚡</span>
+                                <span class="ha-auto-name">Power Outage</span>
+                                <span class="ha-auto-status ✅">UC-06</span>
+                            </div>
+                            <div class="ha-automation-item climate">
+                                <span class="ha-auto-icon">📊</span>
+                                <span class="ha-auto-name">Sensor Health</span>
+                                <span class="ha-auto-status ✅">UC-66</span>
+                            </div>
+                            <!-- Media -->
+                            <div class="ha-automation-item media">
+                                <span class="ha-auto-icon">🎬</span>
+                                <span class="ha-auto-name">Movie Mode</span>
+                                <span class="ha-auto-status ✅">UC-13</span>
+                            </div>
+                            <div class="ha-automation-item media">
+                                <span class="ha-auto-icon">🔊</span>
+                                <span class="ha-auto-name">Audio Sync</span>
+                                <span class="ha-auto-status ✅">UC-14</span>
+                            </div>
+                            <div class="ha-automation-item media">
+                                <span class="ha-auto-icon">⏹️</span>
+                                <span class="ha-auto-name">Media Stop</span>
+                                <span class="ha-auto-status ✅">UC-15</span>
+                            </div>
+                            <!-- Device Health -->
+                            <div class="ha-automation-item health">
+                                <span class="ha-auto-icon">❌</span>
+                                <span class="ha-auto-name">Device Offline</span>
+                                <span class="ha-auto-status ✅">UC-17</span>
+                            </div>
+                            <div class="ha-automation-item health">
+                                <span class="ha-auto-icon">🔁</span>
+                                <span class="ha-auto-name">Battery Swap</span>
+                                <span class="ha-auto-status ✅">UC-65</span>
+                            </div>
+                            <div class="ha-automation-item health">
+                                <span class="ha-auto-icon">📡</span>
+                                <span class="ha-auto-name">Bandwidth Alert</span>
+                                <span class="ha-auto-status ✅">UC-80</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="ha-footer">
+                        <span class="ha-last-updated">Last deploy: Feb 18, 2025</span>
+                        <span class="ha-backup-info">Backup: /config/.backups/</span>
+                    </div>
+                </div>
+            </section>
+            </section>
+        </main>
+
+        <!-- Task Detail Drawer (Right) -->
+        <aside class="drawer task-drawer hidden" id="task-drawer">
+            <div class="drawer-header">
+                <button class="drawer-close" id="close-task-drawer">×</button>
+            </div>
+            <div class="drawer-content" id="task-drawer-content">
+                <div class="drawer-empty">Select a task to view details</div>
+            </div>
+        </aside>
+
+        <!-- Agent Profile Drawer (Right) -->
+        <aside class="drawer agent-drawer hidden" id="agent-drawer">
+            <div class="drawer-header">
+                <h3>👤 Agent Profile</h3>
+                <button class="drawer-close" id="close-agent-drawer">×</button>
+            </div>
+            <div class="drawer-content" id="agent-drawer-content">
+                <div class="agent-profile">
+                    <div class="profile-icon" id="profile-icon">🎯</div>
+                    <div class="profile-name" id="profile-name">Leader Bot</div>
+                    <div class="profile-role" id="profile-role">Coordination & Approvals</div>
+                    <div class="profile-status" id="profile-status">
+                        <span class="status-badge active">Active</span>
+                    </div>
+                    <div class="profile-stats">
+                        <div class="profile-stat clickable" id="profile-tasks-stat">
+                            <div class="stat-number" id="profile-tasks">0</div>
+                            <div class="stat-label">Tasks</div>
+                        </div>
+                        <div class="profile-stat clickable" id="profile-mentions-stat">
+                            <div class="stat-number" id="profile-mentions">0</div>
+                            <div class="stat-label">Mentions</div>
+                        </div>
+                    </div>
+                    <div class="profile-skills">
+                        <h4>Skills</h4>
+                        <div class="skills-list" id="profile-skills">
+                            <span class="skill-tag">Coordination</span>
+                            <span class="skill-tag">Planning</span>
+                            <span class="skill-tag">Delegation</span>
+                        </div>
+                    </div>
+                    <div class="profile-current-task">
+                        <h4>Current Task</h4>
+                        <div class="current-task-item" id="profile-current-task">
+                            approval-001-backup-jobs
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Squad Chat Modal -->
+        <div class="modal hidden" id="chat-modal">
+            <div class="modal-content wide">
+                <div class="modal-header">
+                    <h2>💬 Squad Chat</h2>
+                    <button class="modal-close" data-modal="chat">×</button>
+                </div>
+                <div class="modal-body chat-layout">
+                    <div class="chat-sidebar">
+                        <div class="chat-channel active" data-channel="squad">🎯 Squad</div>
+                        <div class="chat-channel" data-channel="task">📋 Task: approval-001</div>
+                        <div class="chat-channel" data-channel="logs">📝 Logs</div>
+                    </div>
+                    <div class="chat-main">
+                        <div class="chat-messages" id="squad-chat-messages"></div>
+                        <div class="chat-input-wrapper">
+                            <input type="text" id="squad-chat-input" placeholder="Message the squad...">
+                            <button id="squad-chat-send">Send</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Notifications Modal (A2) -->
+        <div class="modal hidden" id="notifications-modal">
+            <div class="modal-content wide">
+                <div class="modal-header">
+                    <h2>🔔 Your Attention Required</h2>
+                    <button class="modal-close" data-modal="notifications">×</button>
+                </div>
+                <div class="modal-body">
+                    <div class="notifications-grid" id="notifications-grid">
+                        <!-- Pending Approvals Section -->
+                        <div class="notification-section" id="section-approvals">
+                            <div class="notification-section-header">
+                                <span class="notification-icon approval-icon">✋</span>
+                                <span class="notification-title">Pending Approvals</span>
+                                <span class="notification-count" id="notif-count-approvals">0</span>
+                            </div>
+                            <div class="notification-tiles" id="tiles-approvals"></div>
+                        </div>
+
+                        <!-- High-Risk Items Section -->
+                        <div class="notification-section" id="section-risk">
+                            <div class="notification-section-header">
+                                <span class="notification-icon risk-icon">🚨</span>
+                                <span class="notification-title">High-Risk Items</span>
+                                <span class="notification-count risk-count" id="notif-count-risk">0</span>
+                            </div>
+                            <div class="notification-tiles" id="tiles-risk"></div>
+                        </div>
+
+                        <!-- Open Questions Section -->
+                        <div class="notification-section" id="section-questions">
+                            <div class="notification-section-header">
+                                <span class="notification-icon question-icon">❓</span>
+                                <span class="notification-title">Open Questions</span>
+                                <span class="notification-count" id="notif-count-questions">0</span>
+                            </div>
+                            <div class="notification-tiles" id="tiles-questions"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Active Tasks Modal (E1) -->
+        <div class="modal hidden" id="active-modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2>⚡ Active Tasks</h2>
+                    <button class="modal-close" data-modal="active">×</button>
+                </div>
+                <div class="modal-body">
+                    <div class="counter-list" id="active-tasks-list"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- All Tasks Modal (E2) -->
+        <div class="modal hidden" id="tasks-modal">
+            <div class="modal-content wide">
+                <div class="modal-header">
+                    <h2>📋 All Tasks</h2>
+                    <button class="modal-close" data-modal="tasks">×</button>
+                </div>
+                <div class="modal-body">
+                    <div class="tasks-filter-bar">
+                        <button class="filter-chip active" data-filter="all">All</button>
+                        <button class="filter-chip" data-filter="review">Review</button>
+                        <button class="filter-chip" data-filter="in-progress">In Progress</button>
+                        <button class="filter-chip" data-filter="completed">Completed</button>
+                        <button class="filter-chip" data-filter="P0">P0</button>
+                        <button class="filter-chip" data-filter="P1">P1</button>
+                        <button class="filter-chip" data-filter="P2">P2</button>
+                    </div>
+                    <div class="counter-list" id="all-tasks-list"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Alerts Modal (E3) -->
+        <div class="modal hidden" id="alerts-modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2>🚨 Alerts</h2>
+                    <button class="modal-close" data-modal="alerts">×</button>
+                </div>
+                <div class="modal-body">
+                    <div class="counter-list" id="alerts-list"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Broadcast Modal -->
+        <div class="modal hidden" id="broadcast-modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2>📢 Broadcast Message</h2>
+                    <button class="modal-close" data-modal="broadcast">×</button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label>Title</label>
+                        <input type="text" id="broadcast-title" placeholder="Announcement title...">
+                    </div>
+                    <div class="form-group">
+                        <label>Message</label>
+                        <textarea id="broadcast-message" rows="4" placeholder="Type your broadcast..."></textarea>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Priority</label>
+                            <select id="broadcast-priority">
+                                <option value="Normal">Normal</option>
+                                <option value="Urgent">Urgent 🟡</option>
+                                <option value="SERIOUS">SERIOUS 🔴</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Send To</label>
+                            <select id="broadcast-recipients">
+                                <option value="all">All Agents</option>
+                                <option value="proxmox">Proxmox Bot</option>
+                                <option value="home">Home Bot</option>
+                                <option value="storage">Storage Bot</option>
+                                <option value="network">Network Bot</option>
+                                <option value="security">Security Bot</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn-secondary modal-close" data-modal="broadcast">Cancel</button>
+                    <button class="btn-primary" id="btn-send-broadcast">🚨 Send Broadcast</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Create Task Modal -->
+        <div class="modal hidden" id="create-task-modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2>Create New Task</h2>
+                    <button class="modal-close" data-modal="create-task">×</button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label>Title</label>
+                        <input type="text" id="new-task-title" placeholder="Task title...">
+                    </div>
+                    <div class="form-group">
+                        <label>Description</label>
+                        <textarea id="new-task-desc" rows="3" placeholder="Task description..."></textarea>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Assign To</label>
+                            <select id="new-task-agent">
+                                <option value="auto"> 🤖 Auto (Leader delegates)</option>
+                                <option value="proxmox">🖥️ Proxmox Bot</option>
+                                <option value="home">🏠 Home Bot</option>
+                                <option value="storage">💾 Storage Bot</option>
+                                <option value="network">🌐 Network Bot</option>
+                                <option value="security">🔐 Security Bot</option>
+                                <option value="leader">🎯 Leader only (review)</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Priority</label>
+                            <select id="new-task-priority">
+                                <option value="P3">P3 - Low</option>
+                                <option value="P2">P2 - Medium</option>
+                                <option value="P1">P1 - High</option>
+                                <option value="P0">P0 - Critical</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn-secondary modal-close" data-modal="create-task">Cancel</button>
+                    <button class="btn-primary" id="btn-create-task-submit">Create Task</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <style>
+        /* Notification Bell Button Styles */
+        .notification-bell {
+            position: relative;
+            padding: 8px 12px !important;
+        }
+
+        .bell-icon {
+            font-size: 16px;
+        }
+
+        .notification-badge {
+            position: absolute;
+            top: -6px;
+            right: -6px;
+            background: var(--accent-danger);
+            color: white;
+            min-width: 18px;
+            height: 18px;
+            border-radius: 9px;
+            font-size: 10px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0 4px;
+            animation: pulse-badge 2s infinite;
+        }
+
+        .notification-badge:empty,
+        .notification-badge[data-count="0"],
+        .notification-badge[style*="display: none"] {
+            display: none !important;
+        }
+
+        @keyframes pulse-badge {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        /* Notification Modal Grid Styles */
+        .notifications-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 16px;
+            max-height: 500px;
+            overflow-y: auto;
+        }
+
+        .notification-section {
+            background: var(--bg-tertiary);
+            border-radius: var(--radius);
+            border: 1px solid var(--border-color);
+            overflow: hidden;
+        }
+
+        .notification-section-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px 14px;
+            background: var(--bg-secondary);
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .notification-icon {
+            font-size: 16px;
+        }
+
+        .approval-icon { color: var(--accent-warning); }
+        .risk-icon { color: var(--accent-danger); }
+        .question-icon { color: var(--accent-primary); }
+
+        .notification-title {
+            flex: 1;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .notification-count {
+            background: var(--accent-primary);
+            color: white;
+            min-width: 22px;
+            height: 22px;
+            border-radius: 11px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 11px;
+            font-weight: 600;
+            padding: 0 6px;
+        }
+
+        .notification-count.risk-count {
+            background: var(--accent-danger);
+        }
+
+        .notification-tiles {
+            padding: 12px;
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 8px;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+
+        .notification-tile {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-sm);
+            padding: 10px;
+            cursor: pointer;
+            transition: var(--transition);
+            border-left: 3px solid transparent;
+        }
+
+        .notification-tile:hover {
+            border-color: var(--accent-primary);
+            transform: translateY(-1px);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .notification-tile.approval-tile {
+            border-left-color: var(--accent-warning);
+        }
+
+        .notification-tile.risk-tile {
+            border-left-color: var(--accent-danger);
+        }
+
+        .notification-tile.question-tile {
+            border-left-color: var(--accent-primary);
+        }
+
+        .notification-tile-title {
+            font-size: 12px;
+            font-weight: 500;
+            color: var(--text-primary);
+            margin-bottom: 6px;
+            line-height: 1.3;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .notification-tile-meta {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 11px;
+            color: var(--text-muted);
+            flex-wrap: wrap;
+        }
+
+        .notification-tile-agent {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .notification-tile-actions {
+            display: flex;
+            gap: 6px;
+            margin-top: 8px;
+        }
+
+        .notification-action-btn {
+            flex: 1;
+            padding: 5px 8px;
+            border: none;
+            border-radius: var(--radius-sm);
+            font-size: 11px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .notification-action-approve {
+            background: rgba(35, 134, 54, 0.2);
+            color: var(--accent-success);
+            border: 1px solid var(--accent-success);
+        }
+
+        .notification-action-approve:hover {
+            background: var(--accent-success);
+            color: white;
+        }
+
+        .notification-action-deny {
+            background: rgba(218, 54, 51, 0.1);
+            color: var(--accent-danger);
+            border: 1px solid var(--accent-danger);
+        }
+
+        .notification-action-deny:hover {
+            background: var(--accent-danger);
+            color: white;
+        }
+
+        .notification-action-defer {
+            background: rgba(210, 153, 34, 0.1);
+            color: var(--accent-warning);
+            border: 1px solid var(--accent-warning);
+        }
+
+        .notification-action-defer:hover {
+            background: var(--accent-warning);
+            color: white;
+        }
+
+        /* Counter Modal Styles */
+        .counter-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .counter-item {
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-sm);
+            padding: 12px;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .counter-item:hover {
+            border-color: var(--accent-primary);
+            background: var(--bg-hover);
+        }
+
+        .counter-item-header {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 6px;
+        }
+
+        .counter-item-title {
+            flex: 1;
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--text-primary);
+        }
+
+        .counter-item-meta {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 11px;
+            color: var(--text-muted);
+        }
+
+        .filter-chip {
+            padding: 4px 10px;
+            border: 1px solid var(--border-color);
+            background: var(--bg-tertiary);
+            color: var(--text-secondary);
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 11px;
+            transition: var(--transition);
+        }
+
+        .filter-chip:hover {
+            background: var(--bg-hover);
+        }
+
+        .filter-chip.active {
+            background: var(--accent-primary);
+            color: white;
+            border-color: var(--accent-primary);
+        }
+
+        .tasks-filter-bar {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 16px;
+            flex-wrap: wrap;
+        }
+
+        /* Clickable counters */
+        .counter {
+            cursor: pointer;
+            padding: 4px 8px;
+            border-radius: var(--radius-sm);
+            transition: var(--transition);
+        }
+
+        .counter:hover {
+            background: var(--bg-hover);
+        }
+
+        /* State chips */
+        .state-chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding: 2px 6px;
+            border-radius: 10px;
+            font-size: 10px;
+            font-weight: 500;
+        }
+
+        .state-chip.risk-p0 { background: rgba(218, 54, 51, 0.2); color: var(--accent-danger); }
+        .state-chip.risk-p1 { background: rgba(210, 153, 34, 0.2); color: var(--accent-warning); }
+        .state-chip.risk-p2 { background: rgba(88, 166, 255, 0.2); color: var(--accent-primary); }
+        .state-chip.risk-p3 { background: var(--bg-hover); color: var(--text-secondary); }
+
+        .state-chip.intent-read { background: rgba(35, 134, 54, 0.2); color: var(--accent-success); }
+        .state-chip.intent-config { background: rgba(88, 166, 255, 0.2); color: var(--accent-primary); }
+        .state-chip.intent-dest { background: rgba(218, 54, 51, 0.2); color: var(--accent-danger); }
+        .state-chip.intent-restart { background: rgba(210, 153, 34, 0.2); color: var(--accent-warning); }
+        .state-chip.intent-shutdown { background: rgba(137, 87, 229, 0.2); color: var(--accent-purple); }
+
+        .state-chip.approved { background: rgba(35, 134, 54, 0.2); color: var(--accent-success); }
+        .state-chip.denied { background: rgba(218, 54, 51, 0.2); color: var(--accent-danger); }
+        .state-chip.deferred { background: rgba(210, 153, 34, 0.2); color: var(--accent-warning); }
+        .state-chip.pending { background: var(--bg-hover); color: var(--text-muted); }
+
+        /* ========== LANDSCAPE LAYOUT (Phase 1) ========== */
+        .main-landscape {
+            display: grid;
+            grid-template-columns: 420px 1fr 320px;
+            gap: 16px;
+            padding: 16px;
+            overflow: hidden;
+            align-items: stretch;
+        }
+
+        /* RIGHT COLUMN: Container for System Overview + Agent Fleet + HA */
+        .right-column {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            overflow: hidden;
+            height: 100%;
+        }
+
+        /* System Overview - fills available space */
+        .right-column .system-overview-panel {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius);
+            overflow: hidden;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .right-column .system-overview-panel .overview-grid {
+            flex: 1;
+            overflow-y: auto;
+            padding: 10px;
+        }
+
+        /* Agent Fleet in right column - compact */
+        .right-column .agent-fleet-panel {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius);
+            overflow: hidden;
+            flex: 0 0 auto;
+            max-height: 200px;
+        }
+
+        .right-column .agent-fleet-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 6px;
+            padding: 8px;
+            max-height: 160px;
+            overflow-y: auto;
+        }
+
+        /* LEFT: Mission Queue Panel */
+        .mission-queue-panel {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            height: 100%;
+            min-width: 0;
+        }
+
+        .mission-queue-panel .kanban-header {
+            padding: 12px 16px;
+            border-bottom: 1px solid var(--border-color);
+            flex-shrink: 0;
+        }
+
+        .mission-queue-panel .kanban-board {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            padding: 12px;
+            overflow-y: auto;
+        }
+
+        .mission-queue-panel .kanban-column {
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius);
+            flex: 1;
+            min-height: 150px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Kanban Column Specific Styles */
+        .mission-queue-panel .kanban-column.assigned {
+            border-left: 3px solid #3498db;
+        }
+
+        .mission-queue-panel .kanban-column.executing {
+            border-left: 3px solid #f39c12;
+            background: rgba(243, 156, 18, 0.05);
+        }
+
+        .mission-queue-panel .kanban-column.waiting {
+            border-left: 3px solid #9b59b6;
+        }
+
+        .mission-queue-panel .kanban-column.done {
+            border-left: 3px solid #27ae60;
+        }
+
+        /* Column header colors */
+        .mission-queue-panel .kanban-column.assigned .column-header {
+            background: rgba(52, 152, 219, 0.1);
+        }
+
+        .mission-queue-panel .kanban-column.executing .column-header {
+            background: rgba(243, 156, 18, 0.15);
+        }
+
+        .mission-queue-panel .kanban-column.waiting .column-header {
+            background: rgba(155, 89, 182, 0.1);
+        }
+
+        .mission-queue-panel .kanban-column.done .column-header {
+            background: rgba(39, 174, 96, 0.1);
+        }
+
+        /* CENTER: Multi-panel column - REDESIGNED */
+        .center-column {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            overflow: hidden;
+            height: 100%;
+            min-width: 0;
+        }
+
+        .panel-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px 12px;
+            background: var(--bg-tertiary);
+            border-bottom: 1px solid var(--border-color);
+            border-radius: var(--radius) var(--radius) 0 0;
+        }
+
+        .panel-header h2 {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin: 0;
+        }
+
+        /* Command Center Panel - Equal distribution */
+        .command-center-panel {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius);
+            overflow: hidden;
+            flex: 1 1 0;
+            display: flex;
+            flex-direction: column;
+            min-height: 0;
+        }
+
+        .command-center-content {
+            flex: 1;
+            overflow-y: auto;
+            padding: 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            min-height: 0;
+        }
+
+        .command-section {
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-sm);
+            padding: 10px;
+        }
+
+        .command-section-header {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 8px;
+        }
+
+        .command-icon {
+            font-size: 14px;
+        }
+
+        .command-title {
+            flex: 1;
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .command-count {
+            font-size: 11px;
+            color: var(--text-muted);
+            font-family: var(--font-mono);
+        }
+
+        .command-items {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            margin-bottom: 8px;
+        }
+
+        .command-placeholder-item {
+            padding: 8px;
+            background: var(--bg-secondary);
+            border-radius: var(--radius-sm);
+            font-size: 12px;
+            color: var(--text-muted);
+            text-align: center;
+        }
+
+        .command-snapshot {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+        }
+
+        .snapshot-item {
+            text-align: center;
+            padding: 8px;
+            background: var(--bg-secondary);
+            border-radius: var(--radius-sm);
+        }
+
+        .snapshot-label {
+            display: block;
+            font-size: 10px;
+            color: var(--text-muted);
+            margin-bottom: 2px;
+        }
+
+        .snapshot-value {
+            display: block;
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-primary);
+            font-family: var(--font-mono);
+        }
+
+        .view-all-btn-small {
+            width: 100%;
+            padding: 6px;
+            background: var(--bg-hover);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-sm);
+            color: var(--text-secondary);
+            font-size: 11px;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .view-all-btn-small:hover {
+            background: var(--accent-primary);
+            color: white;
+            border-color: var(--accent-primary);
+        }
+
+        /* Squad Chat Panel (Now large, flex-grow) - Equal distribution */
+        .squad-chat-panel {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius);
+            overflow: hidden;
+            flex: 1 1 0;
+            display: flex;
+            flex-direction: column;
+            min-height: 0;
+        }
+
+        .squad-chat-panel .chat-messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: 12px;
+        }
+
+        .squad-chat-panel .chat-message {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+
+        .squad-chat-panel .chat-message-avatar {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background: var(--bg-tertiary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            flex-shrink: 0;
+        }
+
+        .squad-chat-panel .chat-message-content {
+            flex: 1;
+        }
+
+        .squad-chat-panel .chat-message-header {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            margin-bottom: 2px;
+        }
+
+        .squad-chat-panel .chat-message-author {
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .squad-chat-panel .chat-message-time {
+            font-size: 10px;
+            color: var(--text-muted);
+        }
+
+        .squad-chat-panel .chat-message-text {
+            font-size: 12px;
+            color: var(--text-secondary);
+            line-height: 1.4;
+        }
+
+        .squad-chat-panel .chat-input-wrapper {
+            display: flex;
+            gap: 8px;
+            padding: 10px 12px;
+            border-top: 1px solid var(--border-color);
+            background: var(--bg-tertiary);
+        }
+
+        .squad-chat-panel .chat-input-wrapper input {
+            flex: 1;
+            padding: 8px 12px;
+            border: 1px solid var(--border-color);
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+            border-radius: var(--radius-sm);
+            font-size: 13px;
+        }
+
+        .squad-chat-panel .chat-input-wrapper button {
+            padding: 8px 14px;
+            background: var(--accent-primary);
+            color: white;
+            border: none;
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        /* Bot Activity Panel */
+        .bot-activity-panel {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius);
+            overflow: hidden;
+            flex-shrink: 0;
+        }
+
+        /* Agent Fleet Panel Styles */
+        .agent-fleet-panel {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius);
+            overflow: hidden;
+            flex: 0 0 auto;
+            max-height: 140px;
+        }
+
+        .agent-fleet-panel .panel-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .fleet-header-controls {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .fleet-header-controls .filter-select {
+            padding: 4px 8px;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-sm);
+            color: var(--text-secondary);
+            font-size: 11px;
+            cursor: pointer;
+        }
+
+        .fleet-header-controls .agent-count {
+            font-size: 12px;
+            color: var(--text-muted);
+            margin-left: 8px;
+        }
+
+        .agent-fleet-panel .agent-fleet-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 8px;
+            padding: 10px;
+            max-height: 110px;
+            overflow-y: auto;
+        }
+
+        /* Bot Activity Panel - DEPRECATED (merged into Agent Fleet) */
+        .bot-activity-panel .bot-activity-filters {
+            display: flex;
+            gap: 8px;
+        }
+
+        .bot-activity-panel .bot-status-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+            padding: 12px;
+        }
+
+        /* Activity Timeline Panel - Equal distribution */
+        .activity-timeline-panel {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius);
+            overflow: hidden;
+            flex: 1 1 0;
+            display: flex;
+            flex-direction: column;
+            min-height: 0;
+        }
+
+        .activity-timeline-panel .panel-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .view-all-btn {
+            padding: 4px 10px;
+            background: transparent;
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-sm);
+            color: var(--text-secondary);
+            font-size: 11px;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .view-all-btn:hover {
+            background: var(--accent-primary);
+            color: white;
+            border-color: var(--accent-primary);
+        }
+
+        .activity-timeline-panel .timeline-grid {
+            flex: 1;
+            overflow-y: auto;
+            padding: 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .timeline-row {
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            gap: 8px;
+        }
+
+        .timeline-tile {
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-sm);
+            padding: 8px;
+            text-align: center;
+        }
+
+        .timeline-tile-time {
+            font-size: 10px;
+            color: var(--text-muted);
+            margin-bottom: 4px;
+        }
+
+        .timeline-tile-bot {
+            font-size: 14px;
+            margin-bottom: 2px;
+        }
+
+        .timeline-tile-action {
+            font-size: 11px;
+            color: var(--text-secondary);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .timeline-tile.severity-ok { border-left: 3px solid var(--accent-success); }
+        .timeline-tile.severity-warn { border-left: 3px solid var(--accent-warning); }
+        .timeline-tile.severity-serious { border-left: 3px solid var(--accent-danger); }
+
+        /* RIGHT: System Overview Panel - DEPRECATED - see .right-column styles above */
+
+        .system-overview-panel .overview-header {
+            padding: 12px 16px;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-shrink: 0;
+        }
+
+        .system-overview-panel .overview-header h2 {
+            font-size: 14px;
+            font-weight: 600;
+            margin: 0;
+        }
+
+        .system-overview-panel .overview-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            padding: 12px;
+        }
+
+        .infra-card-expanded {
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius);
+            padding: 12px;
+        }
+
+        .infra-card-expanded.ok { border-left: 3px solid var(--accent-success); }
+        .infra-card-expanded.warn { border-left: 3px solid var(--accent-warning); }
+        .infra-card-expanded.serious { border-left: 3px solid var(--accent-danger); }
+
+        .infra-card-header {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 10px;
+        }
+
+        .infra-icon {
+            font-size: 18px;
+        }
+
+        .infra-name {
+            flex: 1;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .infra-status {
+            font-size: 14px;
+        }
+
+        .infra-details {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 4px;
+        }
+
+        .infra-detail-row {
+            display: flex;
+            justify-content: space-between;
+            font-size: 11px;
+            padding: 4px 0;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .infra-detail-row:last-child {
+            border-bottom: none;
+        }
+
+        .infra-detail-label {
+            color: var(--text-muted);
+        }
+
+        .infra-detail-value {
+            color: var(--text-primary);
+            font-family: var(--font-mono);
+        }
+
+        .infra-detail-value.missing {
+            color: var(--text-muted);
+        }
+
+        /* === TOKEN ANALYTICS STYLES === */
+        .token-analytics-panel {
+            background: var(--panel-bg);
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius);
+            padding: 16px;
+            margin-bottom: 16px;
+        }
+
+        .token-analytics-panel .panel-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+
+        .token-analytics-panel .panel-header h2 {
+            margin: 0;
+            font-size: 16px;
+        }
+
+        .date-selector {
+            background: rgba(255,255,255,0.05);
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            color: var(--text-primary);
+            padding: 6px 12px;
+            font-size: 14px;
+        }
+
+        .date-selector option {
+            background: var(--panel-bg);
+            color: var(--text-primary);
+        }
+
+        .token-summary-row {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .token-summary-card {
+            background: linear-gradient(135deg, rgba(128,0,0,0.3) 0%, rgba(128,0,0,0.1) 100%);
+            border: 1px solid rgba(128,0,0,0.3);
+            border-radius: var(--border-radius);
+            padding: 12px;
+            text-align: center;
+        }
+
+        .token-summary-label {
+            font-size: 11px;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 4px;
+        }
+
+        .token-summary-value {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .token-split-view {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 20px;
+            min-height: 300px;
+        }
+
+        /* Charts row for side-by-side pie and bar charts */
+        .token-charts-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .token-chart-container.half-width {
+            height: 240px;
+        }
+
+        @media (max-width: 1400px) {
+            .token-charts-row {
+                grid-template-columns: 1fr;
+            }
+            .token-chart-container.half-width {
+                height: 200px;
+            }
+        }
+
+        .token-chart-container {
+            position: relative;
+            height: 280px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .token-table-container {
+            overflow-x: auto;
+        }
+
+        .token-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 13px;
+        }
+
+        .token-table th {
+            background: rgba(128,0,0,0.2);
+            color: var(--text-primary);
+            font-weight: 600;
+            padding: 10px;
+            text-align: left;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .token-table td {
+            padding: 8px 10px;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .token-table tr:hover {
+            background: rgba(255,255,255,0.02);
+        }
+
+        .token-badge {
+            display: inline-block;
+            background: rgba(128,0,0,0.4);
+            color: #fff;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: 600;
+            margin-right: 8px;
+        }
+
+        .token-activity-name {
+            color: var(--text-muted);
+        }
+
+        .token-table .empty-cell {
+            text-align: center;
+            color: var(--text-muted);
+            padding: 40px;
+        }
+
+        @media (max-width: 1200px) {
+            .token-split-view {
+                grid-template-columns: 1fr;
+            }
+            .token-chart-container {
+                height: 200px;
+            }
+            .token-charts-row {
+                grid-template-columns: 1fr;
+            }
+            .token-chart-container.half-width {
+                height: 180px;
+            }
+        }
+    </style>
+
+    <script src="task-storage.js?v=2"></script>
+    <script src="app.js?v=2"></script>
+    <script src="nl-chat-patch.js?v=1"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+    <script src="token-analytics-browser.js?v=1"></script>
+    <script>
+        // Fallback: Load tasks directly if API fails
+        window.addEventListener('load', async () => {
+            setTimeout(async () => {
+                if (!window.missionControl || window.missionControl.workingTasks.length === 0) {
+                    console.log('Attempting fallback task loading...');
+                    try {
+                        const response = await fetch('./data/tasks/tasks.json?t=' + Date.now());
+                        if (response.ok) {
+                            const tasks = await response.json();
+                            if (window.missionControl) {
+                                window.missionControl.tasks = tasks;
+                                window.missionControl.workingTasks = tasks.filter(t => t.status !== 'reference');
+                                window.missionControl.renderKanban();
+                                window.missionControl.updateCounters();
+                                console.log('Fallback loaded', tasks.length, 'tasks');
+                            }
+                        }
+                    } catch (e) {
+                        console.error('Fallback loading failed:', e);
+                    }
+                }
+            }, 1000);
+        });
+    </script>
+</body>
+</html>

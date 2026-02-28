@@ -1,0 +1,453 @@
+# lovelace_dashboard_config.yaml
+
+# Home Assistant Lovelace Dashboard Configuration
+# Beautiful, functional, room-based dashboard
+# Generated: 2026-02-16
+
+# TITLE: "🏠 Home Control Center"
+# TYPE: Panel (responsive grid)
+# ICON: mdi:home-automation
+
+# ==================== DASHBOARD VIEWS ====================
+
+views:
+  # ==================== VIEW 1: HOME STATUS ====================
+  - title: "Status"
+    path: status
+    icon: mdi:home-analytics
+    type: panel
+    badges:
+      - entity: person.anwar
+        name: Anwar
+      - entity: sensor.home_assistant_core_cpu_percent
+        name: CPU
+      - entity: sensor.home_assistant_host_disk_free
+        name: Disk
+    cards:
+      # ATTENTION TILE: Critical items
+      - type: conditional
+        conditions:
+          - entity: sensor.low_battery_devices
+            state_not: "0"
+          - entity: sensor.offline_devices
+            state_not: "0"
+        card:
+          type: alarm-panel
+          entity: alarm_control_panel.home_status
+          name: "⚠️ Attention Required"
+          states:
+            - arm_away
+            - arm_home
+            - disarm
+          style: |
+            ha-card {
+              background: linear-gradient(135deg, #ff6b6b 0%, #ee5a5a 100%);
+              color: white;
+            }
+
+      # QUICK WINS ROW
+      - type: horizontal-stack
+        cards:
+          - type: button
+            name: "Welcome Home"
+            icon: mdi:home-import-outline
+            color: '#4CAF50'
+            tap_action:
+              action: call-service
+              service: automation.trigger
+              service_data:
+                entity_id: automation.welcome_home
+          - type: button
+            name: "Away Mode"
+            icon: mdi:home-export-outline
+            color: '#FF9800'
+            tap_action:
+              action: call-service
+              service: automation.trigger
+              service_data:
+                entity_id: automation.leave_home
+          - type: button
+            name: "Sleep Mode"
+            icon: mdi:weather-night
+            color: '#3F51B5'
+            tap_action:
+              action: call-service
+              service: automation.trigger
+              service_data:
+                entity_id: automation.sleep_mode
+          - type: button
+            name: "Guest Mode"
+            icon: mdi:account-group
+            color: '#9C27B0'
+            tap_action:
+              action: toggle
+              entity_id: input_boolean.guest_mode
+
+      # SYSTEM HEALTH GLANCE
+      - type: glance
+        title: "System Health"
+        entities:
+          - sensor.home_assistant_core_cpu_percent
+            icon: mdi:cpu-32-bit
+            name: CPU
+          - sensor.home_assistant_core_memory_percent
+            icon: mdi:memory
+            name: RAM
+          - sensor.home_assistant_host_disk_free
+            icon: mdi:harddisk
+            name: Disk
+          - binary_sensor.mosquitto_broker_running
+            icon: mdi:mqtt
+            name: MQTT
+          - sensor.backup_last_successful_automatic_backup
+            icon: mdi:backup-restore
+            name: Last Backup
+          - sensor.rpi_power_status
+            icon: mdi:raspberry-pi
+            name: Power
+        state_color: true
+        show_state: true
+        show_name: true
+
+      # ENVIRONMENT SUMMARY
+      - type: weather-forecast
+        entity: weather.forecast_home
+        name: Weather
+        show_forecast: true
+
+      # SUN POSITION
+      - type: entities
+        title: Sun Position
+        entities:
+          - sensor.sun_next_dawn
+          - sensor.sun_next_dusk
+          - sensor.sun_solar_elevation
+
+
+  # ==================== VIEW 2: BEDROOM ====================
+  - title: "Bedroom"
+    path: bedroom
+    icon: mdi:bed-king
+    cards:
+      # TV CONTROL
+      - type: media-control
+        entity: media_player.lg_bedroom
+        name: LG Bedroom TV
+
+      # LIGHTING
+      - type: light
+        entity: light.bedroom_main
+        name: Main Light
+        icon: mdi:ceiling-light
+
+      # ENVIRONMENT SENSORS
+      - type: sensor
+        entity: sensor.bedroom_temperature
+        graph: line
+        detail: 1
+        hours_to_show: 24
+        name: Temperature
+        icon: mdi:thermometer
+
+      - type: sensor
+        entity: sensor.bedroom_humidity
+        graph: line
+        detail: 1
+        hours_to_show: 24
+        name: Humidity
+        icon: mdi:water-percent
+
+      # AIR QUALITY
+      - type: glance
+        title: Bedroom Environment
+        entities:
+          - sensor.bedroom_temperature
+          - sensor.bedroom_humidity
+          - sensor.bedroom_signal_strength
+        show_icon: true
+        show_state: true
+
+      # BEDTIME SHORTCUTS
+      - type: horizontal-stack
+        cards:
+          - type: button
+            name: "Bedtime"
+            icon: mdi:sleep
+            color: '#3F51B5'
+            tap_action:
+              service: automation.trigger
+              entity_id: automation.bedtime_routine
+          - type: button
+            name: "Reading Light"
+            icon: mdi:book-open-variant
+            color: '#FF9800'
+          - type: button
+            name: "Night Light"
+            icon: mdi:lightbulb-on-outline
+            color: '#607D8B'
+
+
+  # ==================== VIEW 3: HALL ====================
+  - title: "Hall"
+    path: hall
+    icon: mdi:door
+    cards:
+      # SECURITY AT A GLANCE
+      - type: alarm-panel
+        entity: alarm_control_panel.home
+        states:
+          - arm_away
+          - arm_home
+          - disarm
+        name: Home Security
+
+      # DOOR/WINDOW STATUS
+      - type: entities
+        title: "Doors & Windows"
+        show_header_toggle: false
+        entities:
+          - binary_sensor.front_door
+            name: Front Door
+          - binary_sensor.balcony_door
+            name: Balcony Door
+          - binary_sensor.bedroom_window
+            name: Bedroom Window
+
+      # HALL LIGHTING
+      - type: light
+        entity: light.hall_main
+        name: Hall Light
+        icon: mdi:ceiling-light
+
+      # MOTION SENSOR STATUS
+      - type: entities
+        title: Motion Sensors
+        entities:
+          - binary_sensor.hall_motion
+            name: Hall Motion
+            icon: mdi:motion-sensor
+
+
+  # ==================== VIEW 4: MEDIA ====================
+  - title: "Media"
+    path: media
+    icon: mdi:television-play
+    cards:
+      # ALL MEDIA PLAYERS
+      - type: media-control
+        entity: media_player.lg_bedroom
+        name: Bedroom TV
+
+      - type: media-control
+        entity: media_player.lg_webos_tv_oled55c36la
+        name: LG OLED
+
+      - type: media-control
+        entity: media_player.bravia_vu3
+        name: Sony TV
+
+      # TTS CONTROL
+      - type: entities
+        title: Text-to-Speech
+        entities:
+          - tts.google_translate_en_com
+            name: Google TTS
+            icon: mdi:speaker-message
+
+      # SCENES
+      - type: horizontal-stack
+        cards:
+          - type: button
+            name: "Movie Mode"
+            icon: mdi:movie-open
+            color: '#673AB7'
+            tap_action:
+              service: scene.turn_on
+              entity_id: scene.movie_mode
+          - type: button
+            name: "Music"
+            icon: mdi:music
+            color: '#E91E63'
+          - type: button
+            name: "Silent"
+            icon: mdi:volume-off
+            color: '#607D8B'
+
+
+  # ==================== VIEW 5: ENVIRONMENT ====================
+  - title: "Environment"
+    path: environment
+    icon: mdi:thermometer-lines
+    cards:
+      # CLIMATE CONTROL
+      - type: thermostat
+        entity: climate.bedroom_ac
+        name: Bedroom AC
+
+      # TEMPERATURE GRAPHS
+      - type: history-graph
+        title: Temperature History
+        entities:
+          - sensor.bedroom_temperature
+          - weather.forecast_home_temperature
+        hours_to_show: 24
+        refresh_interval: 0
+
+      # HUMIDITY GRAPHS
+      - type: history-graph
+        title: Humidity History
+        entities:
+          - sensor.bedroom_humidity
+          - sensor.bedroo_humidity
+        hours_to_show: 24
+
+      # ALL SENSORS
+      - type: entities
+        title: All Environment Sensors
+        entities:
+          - sensor.bedroom_temperature
+            name: Bedroom Temp
+            icon: mdi:thermometer
+          - sensor.bedroo_temperature
+            name: Bedroo Temp
+            icon: mdi:thermometer
+          - sensor.temperature_humidity_sensor_d993_temperature
+            name: D993 Temp
+            icon: mdi:thermometer-wireless
+          - sensor.bedroom_humidity
+            name: Bedroom Humidity
+            icon: mdi:water-percent
+
+
+  # ==================== VIEW 6: NETWORK & INFRA ====================
+  - title: "Network"
+    path: network
+    icon: mdi:lan
+    cards:
+      # NETWORK STATUS
+      - type: glance
+        title: Network Health
+        entities:
+          - binary_sensor.internet
+            name: Internet
+          - sensor.router_uptime
+            name: Router
+          - sensor.openclaw_cloud_status
+            name: OpenClaw
+
+      # SYNOLOGY NAS STATUS
+      - type: conditional
+        conditions:
+          - entity: sensor.synology_dsm_status
+            state_not: unavailable
+        card:
+          type: entities
+          title: Synology NAS
+          entities:
+            - sensor.synology_dsm_cpu_load
+            - sensor.synology_dsm_volume_used
+
+      # BACKUP STATUS
+      - type: entities
+        title: Backup Status
+        entities:
+          - sensor.backup_last_successful_automatic_backup
+            name: Last Backup
+            icon: mdi:backup-restore
+          - sensor.backup_next_scheduled_automatic_backup
+            name: Next Backup
+            icon: mdi:clock-outline
+          - sensor.backup_backup_manager_state
+            name: Manager State
+            icon: mdi:database-sync
+
+      # ZIGBEE HEALTH
+      - type: entities
+        title: Zigbee Network
+        entities:
+          - sensor.zigbee_devices_online
+            name: Devices Online
+          - sensor.zigbee_devices_offline
+            name: Devices Offline
+            icon: mdi:wifi-off
+
+
+  # ==================== VIEW 7: SETTINGS ====================
+  - title: "Settings"
+    path: settings
+    icon: mdi:cog
+    cards:
+      # HOME MODES
+      - type: entities
+        title: Home Modes
+        entities:
+          - input_boolean.guest_mode
+            name: Guest Mode
+            icon: mdi:account-group
+          - input_boolean.vacation_mode
+            name: Vacation Mode
+            icon: mdi:airplane
+          - input_boolean.quiet_mode
+            name: Quiet Mode
+            icon: mdi:volume-off
+
+      # AUTOMATION CONTROLS
+      - type: entities
+        title: Automations
+        entities:
+          - automation.welcome_home
+            name: Welcome Home
+          - automation.leave_home
+            name: Leave Home
+          - automation.bedtime_routine
+            name: Bedtime
+          - automation.morning_briefing
+            name: Morning Briefing
+
+      # SYSTEM INFO
+      - type: entities
+        title: System Information
+        entities:
+          - sensor.home_assistant_core_version
+          - sensor.home_assistant_operating_system_version
+          - sensor.home_assistant_supervisor_version
+
+
+# ==================== THEMES ====================
+themes:
+  clear:
+    primary-color: '#03A9F4'
+    accent-color: '#FF9800'
+    background-color: '#F5F5F5'
+    card-background-color: '#FFFFFF'
+    border-radius: '12px'
+
+  dark:
+    primary-color: '#03A9F4'
+    accent-color: '#FF9800'
+    background-color: '#1C1C1C'
+    card-background-color: '#2D2D2D'
+    border-radius: '12px'
+
+# ==================== CARD SIZES ====================
+# Auto-adjust based on screen size
+# - Mobile: single column
+# - Tablet: 2 columns
+# - Desktop: 3-4 columns
+
+# ==================== NOTES FOR ANWAR ====================
+# This dashboard can be configured entirely via UI:
+# Settings > Dashboards > Add Dashboard > Web page
+# Or manually edit: Settings > Dashboards > Raw config editor
+#
+# For UI-only setup:
+# 1. Go to Settings > Dashboards
+# 2. Click "Add Dashboard" > "By hand (YAML)"
+# 3. Paste this config
+# 4. Save
+#
+# For existing dashboard modification:
+# 1. Go to Overview
+# 2. Edit Dashboard (top right)
+# 3. Raw config editor
+# 4. Merge cards as needed
